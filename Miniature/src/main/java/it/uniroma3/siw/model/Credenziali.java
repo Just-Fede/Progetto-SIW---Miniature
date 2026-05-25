@@ -25,7 +25,7 @@ public class Credenziali
 	@NotBlank
 	private String role;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Utente utente;
 
 	public long getId() {
