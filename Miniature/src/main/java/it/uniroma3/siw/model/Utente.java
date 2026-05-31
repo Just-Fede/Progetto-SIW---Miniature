@@ -14,12 +14,15 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class Utente 
 {
+
+	private static final String DEFAULT_AVATAR = "/img/fotoProfilo/default.jpg";
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
 	private String bio;
-	private String URLFotoProfilo;
+	private String URLFotoProfilo = DEFAULT_AVATAR;
 	
 	private LocalDate dataRegistrazione;
 	
@@ -28,8 +31,10 @@ public class Utente
 
 	@OneToMany(mappedBy="utente")
 	private List<Post> posts;
+
 	@OneToMany(mappedBy="utente")
 	private List<Commento> commenti;
+
 	@OneToMany(mappedBy="utente")
 	private List<UpVote> likes;
 	
@@ -73,6 +78,8 @@ public class Utente
 		this.credenziali = credenziali;
 	}
 
+
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -89,5 +96,29 @@ public class Utente
 		Utente other = (Utente) obj;
 		return Objects.equals(id, other.id);
 	}
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public List<Commento> getCommenti() {
+        return commenti;
+    }
+
+    public void setCommenti(List<Commento> commenti) {
+        this.commenti = commenti;
+    }
+
+    public List<UpVote> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<UpVote> likes) {
+        this.likes = likes;
+    }
 	
 }

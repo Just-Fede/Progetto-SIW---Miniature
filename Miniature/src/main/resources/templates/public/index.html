@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<Title>Post</Title>
+	</head>
+	<body>
+		<h1><a href="/login">Login </a></h1>
+
+<span sec:authorize="isAuthenticated()">
+    <h1>
+        <a th:href="@{'/profilo/' + ${utente.id}}">
+            Profilo personale
+        </a>
+    </h1>
+</span>
+
+	</body>
+</html>

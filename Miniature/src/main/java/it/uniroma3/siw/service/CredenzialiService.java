@@ -23,4 +23,8 @@ public class CredenzialiService {
     public Credenziali saveCredenziali(Credenziali credenziali) {
         return credenzialiRepository.save(credenziali);
     }
+    public Credenziali getCredenzialiByUsername(String name) 
+    {
+        return credenzialiRepository.findByUsername(name).orElse(null);
+    }
 }

@@ -1,48 +1,80 @@
 package it.uniroma3.siw.controller;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import it.uniroma3.siw.model.Credenziali;
 import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.service.CredenzialiService;
 import it.uniroma3.siw.service.UtenteService;
 
+import static it.uniroma3.siw.SecurityConfiguration.ADMIN_ROLE;
+import static it.uniroma3.siw.SecurityConfiguration.DEFAULT_ROLE;
+
+
+import java.time.LocalDate;
 
 @Controller
 public class AuthenticationController {
-	private CredenzialiService credenzialiService;
-	private UtenteService utenteService;
+	private final CredenzialiService credenzialiService;
+	private final UtenteService utenteService;
+	private final PasswordEncoder passwordEncoder;
 
-	public AuthenticationController(CredenzialiService credenzialiService, UtenteService utenteService) {
+	public AuthenticationController(CredenzialiService credenzialiService, UtenteService utenteService, PasswordEncoder passwordEncoder) {
 		this.credenzialiService = credenzialiService;
 		this.utenteService = utenteService;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@GetMapping("/register")
-	public String showRegisterForm(Model model) {
-		model.addAttribute("utente", new Utente());
-		model.addAttribute("credenziali", new Credenziali());
-		return "formRegisterUser";
+	public String showRegisterForm(Authentication authentication) 
+	{
+		if (authentication != null && authentication.isAuthenticated())
+			return "redirect:/";
+
+		return "/Public/register";
 	}
 
 	@GetMapping("/login")
-	public String showLoginForm(Model model) {
-		return "formLogin";
+	public String showLoginForm(Authentication authentication) 
+	{
+		if (authentication != null && authentication.isAuthenticated())
+			return "redirect:/";
+
+		return "/Public/login";
 	}
 
-	@GetMapping("/success")
-	public String defaultAfterLogin(Model model) {
-		return "index";
-	}
-
-	
 	@PostMapping("/register")
-	public String registerUser() {
+	public String registerUser(	@RequestParam String username, 
+								@RequestParam String password,
+								@RequestParam String email,
+								@RequestParam String role) 
+	{
 
-		
-		return "registrationSuccessful";
+		if(!role.equals(ADMIN_ROLE))
+			role = DEFAULT_ROLE;
 
+		Credenziali newCredenziali = new Credenziali();
+		newCredenziali.setUsername(username);
+		newCredenziali.setPassword(passwordEncoder.encode(password));
+		newCredenziali.setEmail(email);
+		newCredenziali.setRole(role);
+		credenzialiService.saveCredenziali(newCredenziali);
+
+		Utente newUtente = new Utente();
+		newUtente.setCredenziali(newCredenziali);
+		newUtente.setBio("L'Imperatore Protegge!");
+		newUtente.setURLFotoProfilo("/img/fotoProfilo/default.jpg");
+		newUtente.setDataRegistrazione(LocalDate.now());
+		utenteService.saveUtente(newUtente);
+
+		newCredenziali.setUtente(newUtente);
+		credenzialiService.saveCredenziali(newCredenziali);
+
+		return "redirect:/login";	
 	}
 }

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profilo Utente</title>
+    <link rel="stylesheet" th:href="@{/css/profilo.css}">
+</head>
+
+<body>
+    <div class="profile-image">
+        <img th:src="@{${utente.URLFotoProfilo}}" alt="Foto profilo" />
+    </div>
+    <div class="container">
+        <p><span th:text="${credenziali.username}">Username</span></p>      
+        <p>Biografia: <span th:text="${utente.bio}">Biografia</span></p>
+        <p>Data di Registrazione: <span th:text="${utente.dataRegistrazione}">Data di Registrazione</span></p>
+        <p><strong>Email:</strong> <span th:text="${credenziali.email}">Email Utente</span></p>
+    </div>
+
+    <a href="/logout">Logout</a>
+    <a href="/">Torna alla Home</a>
+
+</body>
+</html>

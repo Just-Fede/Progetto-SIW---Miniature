@@ -6,8 +6,9 @@ import it.uniroma3.siw.repository.ProdottoOriginaleRepository;
 
 @Service
 public class ProdottoOriginaleService {
-	
-	private ProdottoOriginaleRepository prodottoOriginaleRepository;
+	@SuppressWarnings("unused")
+	private final ProdottoOriginaleRepository prodottoOriginaleRepository;
+
 	public ProdottoOriginaleService(ProdottoOriginaleRepository prodottoOriginaleRepository) {
 	this.prodottoOriginaleRepository=prodottoOriginaleRepository;
 	}

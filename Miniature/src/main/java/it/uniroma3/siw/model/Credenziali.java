@@ -14,9 +14,11 @@ public class Credenziali
 	private long id;
 	
 	@NotBlank
+	@Column(unique=true)
 	private String username;
 	
 	@NotBlank
+	@Column(unique=true)
 	private String email;
 	
 	@NotBlank
