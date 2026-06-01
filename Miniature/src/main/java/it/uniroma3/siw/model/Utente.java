@@ -22,7 +22,7 @@ public class Utente
 	private Long id;
 	
 	private String bio;
-	private String URLFotoProfilo = DEFAULT_AVATAR;
+	private String urlFotoProfilo = DEFAULT_AVATAR;
 	
 	private LocalDate dataRegistrazione;
 	
@@ -54,12 +54,12 @@ public class Utente
 		this.bio = bio;
 	}
 
-	public String getURLFotoProfilo() {
-		return URLFotoProfilo;
+	public String getUrlFotoProfilo() {
+		return urlFotoProfilo;
 	}
 
-	public void setURLFotoProfilo(String uRLFotoProfilo) {
-		URLFotoProfilo = uRLFotoProfilo;
+	public void setUrlFotoProfilo(String urlFotoProfilo) {
+		this.urlFotoProfilo = urlFotoProfilo;
 	}
 
 	public LocalDate getDataRegistrazione() {

@@ -28,10 +28,10 @@ public class ProdottoOriginale
 	private String categoria;
 	
 	@NotBlank
-	private String storeURL;
+	private String storeUrl;
 	
 	@NotBlank
-	private String immagineURL;
+	private String immagineUrl;
 	
 	@OneToMany(mappedBy="prodottoOriginale")
 	private List<Post> posts;
@@ -68,20 +68,20 @@ public class ProdottoOriginale
 		this.categoria = categoria;
 	}
 
-	public String getStoreURL() {
-		return storeURL;
+	public String getStoreUrl() {
+		return storeUrl;
 	}
 
-	public void setStoreURL(String storeURL) {
-		this.storeURL = storeURL;
+	public void setStoreUrl(String storeUrl) {
+		this.storeUrl = storeUrl;
 	}
 
-	public String getImmagineURL() {
-		return immagineURL;
+	public String getImmagineUrl() {
+		return immagineUrl;
 	}
 
-	public void setImmagineURL(String immagineURL) {
-		this.immagineURL = immagineURL;
+	public void setImmagineUrl(String immagineUrl) {
+		this.immagineUrl = immagineUrl;
 	}
 
 	public List<Post> getPosts() {
