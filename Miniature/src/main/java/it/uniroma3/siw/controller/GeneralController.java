@@ -6,33 +6,38 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import it.uniroma3.siw.model.Post;
 import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.service.CredenzialiService;
+import it.uniroma3.siw.service.PostService;
+import java.util.List;
 
 @Controller
-public class GeneralController 
-{
+public class GeneralController {
+
     private final CredenzialiService credenzialiService;
+    private final PostService postService;
 
-    public GeneralController(CredenzialiService credenzialiService) 
-    {
+    public GeneralController(CredenzialiService credenzialiService, PostService postService) {
         this.credenzialiService = credenzialiService;
-    }
-    
-@GetMapping("/")
-public String home(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-
-    if (userDetails != null) {
-        Utente utente = credenzialiService
-                .getCredenziali(userDetails.getUsername())
-                .getUtente();
-
-        model.addAttribute("utente", utente);
+        this.postService = postService;
     }
 
-    return "/public/index";
-}
+    @GetMapping("/")
+    public String home(@AuthenticationPrincipal UserDetails userDetails, Model model) {
 
-    
+        if (userDetails != null) {
+            Utente utente = credenzialiService
+                    .getCredenziali(userDetails.getUsername())
+                    .getUtente();
 
+            model.addAttribute("utente", utente);
+
+        }
+
+        List<Post> elencoPost = this.postService.findAll();
+        model.addAttribute("posts", elencoPost);
+
+        return "/public/index";
+    }
 }

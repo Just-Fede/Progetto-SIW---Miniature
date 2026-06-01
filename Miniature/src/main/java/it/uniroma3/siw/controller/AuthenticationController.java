@@ -68,7 +68,7 @@ public class AuthenticationController {
 		Utente newUtente = new Utente();
 		newUtente.setCredenziali(newCredenziali);
 		newUtente.setBio("L'Imperatore Protegge!");
-		newUtente.setURLFotoProfilo("/img/fotoProfilo/default.jpg");
+		newUtente.setUrlFotoProfilo("/img/fotoProfilo/default.jpg");
 		newUtente.setDataRegistrazione(LocalDate.now());
 		utenteService.saveUtente(newUtente);
 
