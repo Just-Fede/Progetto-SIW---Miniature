@@ -25,38 +25,43 @@
 
 	<hr>
 
-<h2>
-    Post recenti:
-    <span th:text="${posts.size()}"></span>
-</h2>
+	<h2>
+		Post recenti:
+		<span th:text="${posts.size()}"></span>
+	</h2>
 
 	<div th:if="${posts == null || posts.isEmpty()}">
 		<p>Nessun post disponibile.</p>
 	</div>
 
-<div th:each="post : ${posts}" style="border:1px solid #ccc; padding:10px; margin:10px;">
+	<div th:each="post : ${posts}" style="border:1px solid #ccc; padding:10px; margin:10px;">
 
-    <h3 th:text="${post.titolo}">Titolo post</h3>
+		<h3 th:text="${post.titolo}">Titolo post</h3>
 
-    <p th:text="${post.descrizione}">Descrizione</p>
+		<p th:text="${post.descrizione}">Descrizione</p>
 
-    <div th:if="${!#lists.isEmpty(post.immagini)}">
-        <img th:src="${post.immagini[0].url}"
-             style="max-width:200px;" />
-    </div>
+		<div th:if="${post.immagini != null and !#lists.isEmpty(post.immagini)}">
+			<img th:src="@{'/uploads/' + ${post.immagini[0].url}}" style="max-width:200px;" />
+		</div>
 
-    <small>
-        Data:
-        <span th:text="${post.data}"></span>
-    </small>
+		<small>
+			Data:
+			<span th:text="${post.data}"></span>
+		</small>
 
-    <br>
+		<br>
 
-    <a th:href="@{'/post/' + ${post.id}}">
-        Vai al post
-    </a>
+		<a th:href="@{'/post/' + ${post.id}}">
+			Vai al post
+		</a>
 
-</div>
+		<form th:action="@{'/post/' + ${post.id} + '/upVote'}" method="post">
+			<button type="submit">
+				❤️ [[${#lists.size(post.upVotes)}]]
+			</button>
+		</form>
+
+	</div>
 
 </body>
 

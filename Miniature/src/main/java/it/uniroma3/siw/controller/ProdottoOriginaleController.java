@@ -7,7 +7,7 @@ import it.uniroma3.siw.service.ProdottoOriginaleService;
 @Controller
 public class ProdottoOriginaleController {
 
-        @SuppressWarnings("unused")
+                @SuppressWarnings("unused")
 		private final ProdottoOriginaleService prodottoOriginaleService;
 
 		public ProdottoOriginaleController(ProdottoOriginaleService prodottoOriginaleService) 

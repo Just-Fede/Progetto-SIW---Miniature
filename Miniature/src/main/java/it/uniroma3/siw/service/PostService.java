@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import it.uniroma3.siw.model.Post;
+import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.repository.PostRepository;
 
 @Service
@@ -17,9 +18,12 @@ public class PostService {
     private final ProdottoOriginaleService prodottoOriginaleService;
     private final ImmagineService immagineService;
 
-    public PostService(PostRepository postRepository,
-                       ProdottoOriginaleService prodottoOriginaleService,
-                       ImmagineService immagineService) {
+    public PostService(
+        PostRepository postRepository,
+        ProdottoOriginaleService prodottoOriginaleService,
+        ImmagineService immagineService
+    ) {
+
         this.postRepository = postRepository;
         this.prodottoOriginaleService = prodottoOriginaleService;
         this.immagineService = immagineService;
@@ -31,13 +35,15 @@ public class PostService {
             String descrizione,
             Long prodottoId,
             MultipartFile copertina,
-            MultipartFile[] altreImmagini
+            MultipartFile[] altreImmagini,
+            Utente utente
     ) {
 
         Post post = new Post();
         post.setTitolo(titolo);
         post.setDescrizione(descrizione);
         post.setData(LocalDate.now());
+        post.setUtente(utente);
 
         if (prodottoId != null) {
             post.setProdottoOriginale(
@@ -58,6 +64,11 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<Post> findAll() {
-        return (List<Post>) postRepository.findAll();
+        return postRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Post findById(Long id) {
+        return postRepository.findById(id).orElse(null);
     }
 }

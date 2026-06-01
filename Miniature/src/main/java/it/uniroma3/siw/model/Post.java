@@ -1,9 +1,9 @@
 package it.uniroma3.siw.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -38,14 +38,15 @@ public class Post {
     private ProdottoOriginale prodottoOriginale;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Immagine> immagini = new ArrayList<>();
+    private Set<Immagine> immagini = new HashSet<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Commento> commenti = new ArrayList<>();
+    private Set<Commento> commenti = new HashSet<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UpVote> upVotes = new ArrayList<>();
+    private Set<UpVote> upVotes = new HashSet<>();
 
+    
     public long getId() {
         return id;
     }
@@ -94,27 +95,27 @@ public class Post {
         this.prodottoOriginale = prodottoOriginale;
     }
 
-    public List<Commento> getCommenti() {
+    public Set<Commento> getCommenti() {
         return commenti;
     }
 
-    public void setCommenti(List<Commento> commenti) {
+    public void setCommenti(Set<Commento> commenti) {
         this.commenti = commenti;
     }
 
-    public List<UpVote> getUpVotes() {
+    public Set<UpVote> getUpVotes() {
         return upVotes;
     }
 
-    public void setUpVotes(List<UpVote> upVotes) {
+    public void setUpVotes(Set<UpVote> upVotes) {
         this.upVotes = upVotes;
     }
 
-    public List<Immagine> getImmagini() {
+    public Set<Immagine> getImmagini() {
         return immagini;
     }
 
-    public void setImmagini(List<Immagine> immagini) {
+    public void setImmagini(Set<Immagine> immagini) {
         this.immagini = immagini;
     }
 

@@ -30,6 +30,7 @@ public class ImmagineService {
         }
     }
 
+    @SuppressWarnings("UseSpecificCatch")
     private Immagine salvaFile(Post post, MultipartFile file, boolean copertina) {
 
         try {

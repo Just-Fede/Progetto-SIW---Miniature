@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dettaglio Post</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .user {
+            font-weight: bold;
+        }
+
+        .small {
+            color: gray;
+            font-size: 0.9em;
+        }
+
+        .img {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            margin-top: 10px;
+        }
+
+        .likes {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- TITOLO -->
+        <h1 th:text="${post.titolo}">Titolo post</h1>
+
+        <!-- AUTORE -->
+        <p class="user">
+            Pubblicato da:
+            <span th:text="${post.utente != null && post.utente.credenziali != null ? post.utente.credenziali.username : 'Utente sconosciuto'}">
+                utente
+            </span>
+        </p>
+
+        <!-- DATA -->
+        <p class="small" th:text="${post.data}">
+            data
+        </p>
+
+        <!-- DESCRIZIONE -->
+        <div class="box">
+            <p th:text="${post.descrizione}">
+                descrizione
+            </p>
+        </div>
+
+        <!-- PRODOTTO ORIGINALE -->
+        <div class="box" th:if="${post.prodottoOriginale != null}">
+            <h3>Prodotto originale</h3>
+
+            <p>
+                <strong th:text="${post.prodottoOriginale.nome}">
+                    Nome prodotto
+                </strong>
+            </p>
+
+            <p th:text="${post.prodottoOriginale.descrizione}">
+                Descrizione prodotto
+            </p>
+        </div>
+
+        <!-- IMMAGINI -->
+        <div class="box">
+
+            <h3>Immagini</h3>
+
+            <div th:if="${post.immagini == null || #lists.isEmpty(post.immagini)}">
+                Nessuna immagine disponibile
+            </div>
+
+            <div th:each="immagine : ${post.immagini}">
+                <img th:src="@{'/uploads/' + ${immagine.url}}"
+                     alt="Immagine del post"
+                     class="img">
+            </div>
+
+        </div>
+
+        <!-- LIKE -->
+        <div class="likes">
+
+            <form th:action="@{'/post/' + ${post.id} + '/upVote'}"
+                  method="post">
+
+                <button type="submit">
+                    👍 Like
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

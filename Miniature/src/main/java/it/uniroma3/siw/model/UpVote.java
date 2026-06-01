@@ -1,6 +1,5 @@
 package it.uniroma3.siw.model;
 
-import java.time.LocalDate;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
@@ -8,18 +7,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class UpVote 
 {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
-	@NotNull
-	private LocalDate data;
 
 	@ManyToOne
 	private Post post;
@@ -33,14 +28,6 @@ public class UpVote
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public LocalDate getData() {
-		return data;
-	}
-
-	public void setData(LocalDate data) {
-		this.data = data;
 	}
 
 	public Post getPost() {
