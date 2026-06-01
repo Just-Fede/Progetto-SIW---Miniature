@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import it.uniroma3.siw.model.Post;
+import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.repository.PostRepository;
 
 @Service
@@ -34,13 +35,15 @@ public class PostService {
             String descrizione,
             Long prodottoId,
             MultipartFile copertina,
-            MultipartFile[] altreImmagini
+            MultipartFile[] altreImmagini,
+            Utente utente
     ) {
 
         Post post = new Post();
         post.setTitolo(titolo);
         post.setDescrizione(descrizione);
         post.setData(LocalDate.now());
+        post.setUtente(utente);
 
         if (prodottoId != null) {
             post.setProdottoOriginale(

@@ -46,6 +46,7 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UpVote> upVotes = new HashSet<>();
 
+    
     public long getId() {
         return id;
     }
