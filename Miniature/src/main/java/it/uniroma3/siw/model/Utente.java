@@ -36,7 +36,7 @@ public class Utente
 	private List<Commento> commenti;
 
 	@OneToMany(mappedBy="utente")
-	private List<UpVote> likes;
+	private List<UpVote> upVotes;
 	
 	public Long getId() {
 		return id;
@@ -113,12 +113,12 @@ public class Utente
         this.commenti = commenti;
     }
 
-    public List<UpVote> getLikes() {
-        return likes;
+    public List<UpVote> getUpVotes() {
+        return upVotes;
     }
 
-    public void setLikes(List<UpVote> likes) {
-        this.likes = likes;
+    public void setUpVotes(List<UpVote> upVotes) {
+        this.upVotes = upVotes;
     }
 	
 }

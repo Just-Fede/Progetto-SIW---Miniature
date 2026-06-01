@@ -17,9 +17,12 @@ public class PostService {
     private final ProdottoOriginaleService prodottoOriginaleService;
     private final ImmagineService immagineService;
 
-    public PostService(PostRepository postRepository,
-                       ProdottoOriginaleService prodottoOriginaleService,
-                       ImmagineService immagineService) {
+    public PostService(
+        PostRepository postRepository,
+        ProdottoOriginaleService prodottoOriginaleService,
+        ImmagineService immagineService
+    ) {
+
         this.postRepository = postRepository;
         this.prodottoOriginaleService = prodottoOriginaleService;
         this.immagineService = immagineService;
@@ -58,6 +61,11 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<Post> findAll() {
-        return (List<Post>) postRepository.findAll();
+        return postRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Post findById(Long id) {
+        return postRepository.findById(id).orElse(null);
     }
 }

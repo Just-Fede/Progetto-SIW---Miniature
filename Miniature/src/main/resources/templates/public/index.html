@@ -40,7 +40,7 @@
 
 		<p th:text="${post.descrizione}">Descrizione</p>
 
-		<div th:if="${!#lists.isEmpty(post.immagini)}">
+		<div th:if="${post.immagini != null and !#lists.isEmpty(post.immagini)}">
 			<img th:src="@{'/uploads/' + ${post.immagini[0].url}}" style="max-width:200px;" />
 		</div>
 
@@ -54,6 +54,12 @@
 		<a th:href="@{'/post/' + ${post.id}}">
 			Vai al post
 		</a>
+
+		<form th:action="@{'/post/' + ${post.id} + '/upVote'}" method="post">
+			<button type="submit">
+				❤️ [[${#lists.size(post.upVotes)}]]
+			</button>
+		</form>
 
 	</div>
 
