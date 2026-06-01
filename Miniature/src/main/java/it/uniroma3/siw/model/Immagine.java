@@ -16,11 +16,11 @@ public class Immagine
 	public final static String DIRECTORY = "uploads";
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@NotNull
-	private String URL;
+	private String url;	// 123.png
 	
 	private boolean copertina = false;
 	
@@ -35,12 +35,12 @@ public class Immagine
 		this.id = id;
 	}
 
-	public String getURL() {
-		return URL;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setURL(String uRL) {
-		URL = uRL;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public boolean isCopertina() {

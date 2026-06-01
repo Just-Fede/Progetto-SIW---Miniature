@@ -9,33 +9,30 @@
 
 <body>
     <h1>Crea un nuovo post</h1>
-    <form   th:action="@{/post/create}" 
-            method="post"
-            enctype="multipart/form-data">
+<form th:action="@{/post/create}" method="post" enctype="multipart/form-data">
+    <label>Titolo:</label><br>
+    <input type="text" name="titolo" required><br><br>
 
-        <label for="title">Titolo:</label><br>
-        <input type="text" id="title" name="title" required><br><br>
+    <label>Contenuto:</label><br>
+    <textarea name="descrizione" required></textarea><br><br>
 
-        <label for="content">Contenuto:</label><br>
-        <textarea id="content" name="content" rows="4" cols="50" required></textarea><br><br>
+    <label>Prodotto Originale:</label>
+    <select name="prodottoId">
+        <option value="" disabled selected>Seleziona prodotto</option>
+        <option th:each="p : ${prodottiOriginali}"
+                th:value="${p.id}"
+                th:text="${p.nome}">
+        </option>
+    </select><br><br>
 
-        <label for="prodottoOriginale">Prodotto Originale:</label>
-        <select th:field="*{prodottiOriginali}">
-            <option value="" disabled selected>Seleziona prodotto originale</option>
-            <option th:each="p : ${prodottiOriginali}"
-                    th:value="${p.id}"
-                    th:text="${p.nome}">
-            </option>
-        </select><br><br>
+    <label>Immagine Copertina:</label>
+    <input type="file" name="copertina" required><br><br>
 
-        <label for="immagini">Immagine Copertina:</label>
-        <input type="file" id="immagini" name="immagini" required><br><br>
+    <label>Altre Immagini:</label>
+    <input type="file" name="altreImmagini" multiple><br><br>
 
-        <label for="altreImmagini">Altre Immagini:</label>
-        <input type="file" id="altreImmagini" name="altreImmagini" multiple><br><br>
-
-        <input type="submit" value="Crea Post">
-    </form>
+    <input type="submit" value="Crea Post">
+</form>
 </body>
 
 </html>

@@ -35,7 +35,7 @@ public class GeneralController {
 
         }
 
-        List<Post> elencoPost = this.postService.findALL();
+        List<Post> elencoPost = this.postService.findAll();
         model.addAttribute("posts", elencoPost);
 
         return "/public/index";
