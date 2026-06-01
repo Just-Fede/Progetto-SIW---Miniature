@@ -10,16 +10,19 @@ import it.uniroma3.siw.repository.PostRepository;
 
 @Service
 public class PostService {
-	private PostRepository postRepository;
+	private final PostRepository postRepository;
+	
 	public PostService (PostRepository postRepository) {
 		this.postRepository=postRepository;
 	}
+	
 	@Transactional(readOnly=true)
 	public List<Post> findALL() {
 		return (List<Post>)this.postRepository.findAll();
 	}
-	
-	
-	
 
+    public void save(Post newPost) 
+	{
+		this.postRepository.save(newPost);
+    }
 }

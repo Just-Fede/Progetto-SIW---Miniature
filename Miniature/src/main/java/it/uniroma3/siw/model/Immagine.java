@@ -12,6 +12,9 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 public class Immagine 
 {
+
+	public final static String DIRECTORY = "uploads";
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;

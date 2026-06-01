@@ -59,7 +59,7 @@ public class SecurityConfiguration
                     .hasAuthority(ADMIN_ROLE);
 
             authorize.requestMatchers(
-                    "/User/**"
+                    "/user/**"
             ).authenticated();
 
             authorize.anyRequest().permitAll();
