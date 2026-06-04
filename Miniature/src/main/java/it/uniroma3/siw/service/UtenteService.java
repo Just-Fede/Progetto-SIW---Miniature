@@ -24,4 +24,9 @@ public class UtenteService {
         return this.utenteRepository.save(utente);
     }
 
+    public void save(Utente utente)
+    {
+        this.utenteRepository.save(utente);
+    }
+
 }

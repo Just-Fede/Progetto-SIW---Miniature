@@ -28,4 +28,9 @@ public class ProdottoOriginaleService
         return this.prodottoOriginaleRepository.findById(prodottoId).get();
     }
 
+	public void save(ProdottoOriginale prodottoOriginale)
+	{
+		this.prodottoOriginaleRepository.save(prodottoOriginale);
+	}
+
 }

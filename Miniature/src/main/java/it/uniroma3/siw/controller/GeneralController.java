@@ -1,5 +1,7 @@
 package it.uniroma3.siw.controller;
 
+import java.util.List;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -10,7 +12,7 @@ import it.uniroma3.siw.model.Post;
 import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.service.CredenzialiService;
 import it.uniroma3.siw.service.PostService;
-import java.util.List;
+
 
 @Controller
 public class GeneralController {
@@ -40,4 +42,10 @@ public class GeneralController {
 
         return "/public/index";
     }
+
+    @GetMapping("/admin/index")
+    public String getAdminIndex() {
+        return "/admin/index";
+    }
+    
 }

@@ -1,5 +1,7 @@
 package it.uniroma3.siw.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -7,16 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import static it.uniroma3.siw.SecurityConfiguration.ROLE_ADMIN;
+import static it.uniroma3.siw.SecurityConfiguration.ROLE_USER;
 import it.uniroma3.siw.model.Credenziali;
 import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.service.CredenzialiService;
 import it.uniroma3.siw.service.UtenteService;
-
-import static it.uniroma3.siw.SecurityConfiguration.ADMIN_ROLE;
-import static it.uniroma3.siw.SecurityConfiguration.DEFAULT_ROLE;
-
-
-import java.time.LocalDate;
 
 @Controller
 public class AuthenticationController {
@@ -55,8 +53,8 @@ public class AuthenticationController {
 								@RequestParam String role) 
 	{
 
-		if(!role.equals(ADMIN_ROLE))
-			role = DEFAULT_ROLE;
+		if(!role.equals(ROLE_ADMIN))
+			role = ROLE_USER;
 
 		Credenziali newCredenziali = new Credenziali();
 		newCredenziali.setUsername(username);

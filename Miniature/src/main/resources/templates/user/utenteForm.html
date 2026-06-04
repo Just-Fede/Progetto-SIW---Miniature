@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<head></head>
+
+<body>
+    <form th:action="@{'/utente/' + ${utente.id} + '/form'}" th:object="${utente}" method="post"
+        enctype="multipart/form-data">
+
+        <!-- BIO -->
+        <div>
+            <label>Bio</label>
+            <textarea th:field="*{bio}" rows="4"></textarea>
+        </div>
+
+        <br>
+
+        <!-- FOTO PROFILO -->
+        <div>
+            <label>Foto profilo</label>
+            <input type="file" name="fileFoto">
+        </div>
+
+        <br>
+
+        <button type="submit">Salva</button>
+    </form>
+</body>
