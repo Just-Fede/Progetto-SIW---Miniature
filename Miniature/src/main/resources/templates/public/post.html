@@ -54,7 +54,8 @@
         <!-- AUTORE -->
         <p class="user">
             Pubblicato da:
-            <span th:text="${post.utente != null && post.utente.credenziali != null ? post.utente.credenziali.username : 'Utente sconosciuto'}">
+            <span
+                th:text="${post.utente != null && post.utente.credenziali != null ? post.utente.credenziali.username : 'Utente sconosciuto'}">
                 utente
             </span>
         </p>
@@ -96,9 +97,7 @@
             </div>
 
             <div th:each="immagine : ${post.immagini}">
-                <img th:src="@{'/uploads/' + ${immagine.url}}"
-                     alt="Immagine del post"
-                     class="img">
+                <img th:src="@{'/uploads/' + ${immagine.url}}" alt="Immagine del post" class="img">
             </div>
 
         </div>
@@ -106,8 +105,7 @@
         <!-- LIKE -->
         <div class="likes">
 
-            <form th:action="@{'/post/' + ${post.id} + '/upVote'}"
-                  method="post">
+            <form th:action="@{'/post/' + ${post.id} + '/upVote'}" method="post">
 
                 <button type="submit">
                     👍 Like
@@ -117,7 +115,46 @@
 
         </div>
 
+        <!-- Commenti -->
+        <div>
+            <button>
+                <a th:href="@{'/user/' + ${post.id} + '/commentoForm'}">
+                    Nuovo Commento
+                </a>
+            </button>
+
+            <div th:if="${commenti == null || commenti.isEmpty()}">
+                <p>Ancora nessun commento disponibile.</p>
+            </div>
+
+            <div th:each="commento : ${commenti}" class="box">
+
+                <h3 th:text = "${commento.utente.credenziali.username}">
+                </h3>
+
+                <hr>
+
+                <h4 th:text="${commento.titolo}">
+                    Titolo del commento
+                </h4>
+
+                <p th:text="${commento.testo}">
+                    Testo del commento
+                </p>
+
+                <small th:text="${commento.data}">
+                    Data del commento
+                </small>
+
+            </div>
+
+        </div>
+
     </div>
+
+    <button>
+        <a href="/">Torna indietro</a>
+    </button>
 
 </body>
 

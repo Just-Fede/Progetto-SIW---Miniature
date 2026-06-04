@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Commento Form</title>
+</head>
+
+<body>
+    <form th:action="@{/user/{id}/commentoForm(id=${post.id})}" method="post">
+
+        <div>
+            <label for="titolo">Titolo</label>
+            <input type="text" id="titolo" name="titolo" required>
+        </div>
+
+        <div>
+            <label for="testo">Testo</label>
+            <textarea id="testo" name="testo" required></textarea>
+        </div>
+
+        <button type="submit">Pubblica commento</button>
+    </form>
+
+    <button>
+        <a th:href="@{/post/{id}(id=${post.id})}">Torna indietro</a>
+    </button>
+
+</body>
+
+</html>
