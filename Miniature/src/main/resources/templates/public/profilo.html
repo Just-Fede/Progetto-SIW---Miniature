@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Profilo Utente</title>
@@ -11,14 +12,19 @@
         <img th:src="@{${utente.urlFotoProfilo}}" alt="Foto profilo" />
     </div>
     <div class="container">
-        <p><span th:text="${credenziali.username}">Username</span></p>      
+        <p><span th:text="${utente.credenziali.username}">Username</span></p>
         <p>Biografia: <span th:text="${utente.bio}">Biografia</span></p>
         <p>Data di Registrazione: <span th:text="${utente.dataRegistrazione}">Data di Registrazione</span></p>
-        <p><strong>Email:</strong> <span th:text="${credenziali.email}">Email Utente</span></p>
+        <p><strong>Email:</strong> <span th:text="${utente.credenziali.email}">Email Utente</span></p>
     </div>
 
-    <a href="/logout">Logout</a>
+    <a th:if="${utenteLoggato != null and utenteLoggato.id == utente.id}"
+        th:href="@{'/utente/' + ${utente.id} + '/form'}">
+        Modifica profilo
+    </a>
+
     <a href="/">Torna alla Home</a>
 
 </body>
+
 </html>

@@ -17,8 +17,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration 
 {
 
-    public static final String DEFAULT_ROLE = "DEFAULT_ROLE";
-    public static final String ADMIN_ROLE = "ADMIN_ROLE";
+    public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     private final DataSource dataSource;
 
@@ -56,7 +56,7 @@ public class SecurityConfiguration
             .authorizeHttpRequests(authorize -> {
 
             authorize.requestMatchers("/admin/**")
-                    .hasAuthority(ADMIN_ROLE);
+                    .hasAuthority(ROLE_ADMIN);
 
             authorize.requestMatchers(
                     "/user/**"
