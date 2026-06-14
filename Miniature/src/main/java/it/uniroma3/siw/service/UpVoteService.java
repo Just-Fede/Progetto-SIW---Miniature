@@ -32,4 +32,10 @@ public class UpVoteService
             upVoRepository.save(upVote);
         }
     }
+    
+    public void deleteByPost(Post post)
+    {
+    	this.upVoRepository.deleteByPost(post);
+    }
+    
 }

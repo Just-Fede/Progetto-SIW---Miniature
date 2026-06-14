@@ -40,7 +40,6 @@ public class SecurityConfiguration
     }
 
     @Bean
-    @SuppressWarnings("unused")
     PasswordEncoder passwordEncoder() 
     {
         return new BCryptPasswordEncoder();

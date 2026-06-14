@@ -17,16 +17,22 @@ public class PostService {
     private final PostRepository postRepository;
     private final ProdottoOriginaleService prodottoOriginaleService;
     private final ImmagineService immagineService;
+    private final CommentoService commentoService;
+    private final UpVoteService upVoteService;
 
     public PostService(
-        PostRepository postRepository,
-        ProdottoOriginaleService prodottoOriginaleService,
-        ImmagineService immagineService
+            PostRepository postRepository,
+            ProdottoOriginaleService prodottoOriginaleService,
+            ImmagineService immagineService,
+            CommentoService commentoService,
+            UpVoteService upVoteService
     ) {
 
         this.postRepository = postRepository;
         this.prodottoOriginaleService = prodottoOriginaleService;
         this.immagineService = immagineService;
+        this.commentoService = commentoService;
+        this.upVoteService = upVoteService;
     }
 
     @Transactional
@@ -71,4 +77,15 @@ public class PostService {
     public Post findById(Long id) {
         return postRepository.findById(id).orElse(null);
     }
+
+    @Transactional
+    public void delete(Post post) 
+    {
+        this.commentoService.deleteByPost(post);
+        this.upVoteService.deleteByPost(post);
+        this.immagineService.deleteByPost(post);
+
+        this.postRepository.delete(post);
+    }
+
 }

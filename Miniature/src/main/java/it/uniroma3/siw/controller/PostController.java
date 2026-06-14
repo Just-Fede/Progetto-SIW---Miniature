@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import static it.uniroma3.siw.SecurityConfiguration.ROLE_ADMIN;
 import it.uniroma3.siw.model.Commento;
 import it.uniroma3.siw.model.Credenziali;
 import it.uniroma3.siw.model.Post;
@@ -99,13 +100,45 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public String getPost(@PathVariable Long id, Model model) {
+    public String getPost(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         Post post = postService.findById(id);
         model.addAttribute("post", post);
+
+        if(userDetails != null)
+        {
+            Utente utenteLoggato = this.credenzialiService.getCredenzialiByUsername(userDetails.getUsername()).getUtente();
+            model.addAttribute("utenteLoggato", utenteLoggato);
+        }
 
         Set<Commento> commenti = post.getCommenti();
         model.addAttribute("commenti", commenti);
         return "/public/post";
     }
+
+    @PostMapping("/post/delete/{id}")
+    public String deletePost(@PathVariable Long id,
+                             @AuthenticationPrincipal UserDetails userDetails) {
+
+        if (userDetails == null)
+            return "redirect:/login";
+
+        Post post = postService.findById(id);
+
+        Credenziali credenziali =
+                credenzialiService.getCredenzialiByUsername(userDetails.getUsername());
+
+        boolean admin = credenziali.getRole().equals(ROLE_ADMIN);
+
+        boolean proprietario =
+                credenziali.getUtente().getId().equals(post.getUtente().getId());
+
+        if (!admin && !proprietario)
+            return "error/403";
+
+        postService.delete(post);
+
+        return "redirect:/";
+    }
+    
 
 }
