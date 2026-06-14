@@ -22,7 +22,7 @@
 
     <hr>
 
-    <div>
+    <div class="posts-container">
 
         <div th:if="${utente.posts == null || utente.posts.isEmpty()}">
             Nessun post pubblicato.
@@ -31,21 +31,21 @@
         <div th:each="post : ${utente.posts}" class="post-card">
 
             <a th:href="@{'/post/' + ${post.id}}" style="text-decoration:none; color:inherit;">
-            <h3 th:text="${post.titolo}"></h3>
 
-            <p th:text="${post.descrizione}"></p>
+                <h3 th:text="${post.titolo}"></h3>
 
-            <div th:if="${post.immagini != null and !#lists.isEmpty(post.immagini)}">
-                <img th:src="@{'/uploads/' + ${post.immagini[0].url}}" style="max-width:200px;">
-            </div>
+                <p th:text="${post.descrizione}"></p>
 
-            <small th:text="${post.data}"></small>
+                <div th:if="${post.immagini != null and !#lists.isEmpty(post.immagini)}">
+                    <img th:src="@{'/uploads/' + ${post.immagini[0].url}}">
+                </div>
 
-            <br><br>
+                <small th:text="${post.data}"></small>
 
             </a>
 
         </div>
+
     </div>
 
     <hr>

@@ -51,4 +51,9 @@ public class ImmagineService {
             throw new RuntimeException("Errore salvataggio immagine", e);
         }
     }
+    
+    public void deleteByPost(Post post)
+    {
+    	this.immagineRepository.deleteByPost(post);
+    }
 }

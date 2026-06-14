@@ -9,4 +9,5 @@ public interface UpVoteRepository extends CrudRepository<UpVote, Long>
 {
     boolean existsByPostAndUtente(Post post, Utente utente);
     void deleteByPostAndUtente(Post post, Utente utente);
+	void deleteByPost(Post post);
 }
