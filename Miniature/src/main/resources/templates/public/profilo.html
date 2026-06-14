@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Profilo Utente</title>
     <link rel="stylesheet" th:href="@{/css/profilo.css}">
+
 </head>
 
 <body>
@@ -15,8 +16,39 @@
         <p><span th:text="${utente.credenziali.username}">Username</span></p>
         <p>Biografia: <span th:text="${utente.bio}">Biografia</span></p>
         <p>Data di Registrazione: <span th:text="${utente.dataRegistrazione}">Data di Registrazione</span></p>
+        <p>Post Pubblicati:<span th:text="${utente.posts.size()}"></span></p>
         <p><strong>Email:</strong> <span th:text="${utente.credenziali.email}">Email Utente</span></p>
     </div>
+
+    <hr>
+
+    <div>
+
+        <div th:if="${utente.posts == null || utente.posts.isEmpty()}">
+            Nessun post pubblicato.
+        </div>
+
+        <div th:each="post : ${utente.posts}" class="post-card">
+
+            <a th:href="@{'/post/' + ${post.id}}" style="text-decoration:none; color:inherit;">
+            <h3 th:text="${post.titolo}"></h3>
+
+            <p th:text="${post.descrizione}"></p>
+
+            <div th:if="${post.immagini != null and !#lists.isEmpty(post.immagini)}">
+                <img th:src="@{'/uploads/' + ${post.immagini[0].url}}" style="max-width:200px;">
+            </div>
+
+            <small th:text="${post.data}"></small>
+
+            <br><br>
+
+            </a>
+
+        </div>
+    </div>
+
+    <hr>
 
     <a th:if="${utenteLoggato != null and utenteLoggato.id == utente.id}"
         th:href="@{'/utente/' + ${utente.id} + '/form'}">

@@ -54,6 +54,19 @@
         .likes {
             margin-top: 15px;
         }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
     </style>
 </head>
 
@@ -113,10 +126,12 @@
                 Nessuna immagine disponibile
             </div>
 
-            <div class="img-container">
+            <div class="gallery">
+
                 <div th:each="immagine : ${post.immagini}">
-                    <img th:src="@{'/uploads/' + ${immagine.url}}" alt="Immagine del post" class="img">
+                    <img th:src="@{'/uploads/' + ${immagine.url}}" alt="Immagine del post">
                 </div>
+
             </div>
 
         </div>
@@ -172,49 +187,43 @@
                 <p>Ancora nessun commento disponibile.</p>
             </div>
 
-<div th:each="commento : ${commenti}"
-     class="box"
-     style="display:flex; gap:10px; align-items:flex-start;">
+            <div th:each="commento : ${commenti}" class="box" style="display:flex; gap:10px; align-items:flex-start;">
 
-    <!-- LINK PROFILO (avatar + username) -->
-    <a th:if="${commento.utente != null}"
-       th:href="@{'/profilo/' + ${commento.utente.id}}"
-       style="display:flex; gap:10px; text-decoration:none; color:inherit;">
+                <!-- LINK PROFILO (avatar + username) -->
+                <a th:if="${commento.utente != null}" th:href="@{'/profilo/' + ${commento.utente.id}}"
+                    style="display:flex; gap:10px; text-decoration:none; color:inherit;">
 
-        <!-- AVATAR -->
-        <img th:src="${commento.utente.urlFotoProfilo != null 
+                    <!-- AVATAR -->
+                    <img th:src="${commento.utente.urlFotoProfilo != null 
                         ? commento.utente.urlFotoProfilo 
-                        : '/img/default-avatar.png'}"
-             alt="avatar"
-             style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                        : '/img/default-avatar.png'}" alt="avatar"
+                        style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
 
-        <!-- CONTENUTO -->
-        <div style="flex:1;">
+                    <!-- CONTENUTO -->
+                    <div style="flex:1;">
 
-            <!-- USERNAME -->
-            <h3 style="margin:0; font-size:16px;"
-                th:text="${commento.utente != null && commento.utente.credenziali != null 
+                        <!-- USERNAME -->
+                        <h3 style="margin:0; font-size:16px;" th:text="${commento.utente != null && commento.utente.credenziali != null 
                     ? commento.utente.credenziali.username 
                     : 'Utente sconosciuto'}">
-            </h3>
+                        </h3>
 
-            <hr>
+                        <hr>
 
-            <!-- TITOLO -->
-            <h4 th:text="${commento.titolo}" style="margin:5px 0;"></h4>
+                        <!-- TITOLO -->
+                        <h4 th:text="${commento.titolo}" style="margin:5px 0;"></h4>
 
-            <!-- TESTO -->
-            <p th:text="${commento.testo}"
-               style="font-size:14px; color:#333;"></p>
+                        <!-- TESTO -->
+                        <p th:text="${commento.testo}" style="font-size:14px; color:#333;"></p>
 
-            <!-- DATA -->
-            <small th:text="${commento.data}" style="color:gray;"></small>
+                        <!-- DATA -->
+                        <small th:text="${commento.data}" style="color:gray;"></small>
 
-        </div>
+                    </div>
 
-    </a>
+                </a>
 
-</div>
+            </div>
 
         </div>
 

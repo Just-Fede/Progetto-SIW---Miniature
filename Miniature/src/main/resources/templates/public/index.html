@@ -3,6 +3,30 @@
 
 <head>
 	<Title>Post</Title>
+
+	<style>
+		.posts-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+			gap: 20px;
+			padding: 20px;
+		}
+
+		.post-card {
+			border: 1px solid #ccc;
+			padding: 15px;
+			border-radius: 8px;
+			background: white;
+		}
+
+		.post-card img.post-image {
+			width: 100%;
+			height: 250px;
+			object-fit: cover;
+			border-radius: 8px;
+		}
+	</style>
+
 </head>
 
 <body>
@@ -44,51 +68,67 @@
 		<p>Nessun post disponibile.</p>
 	</div>
 
-	<div th:each="post : ${posts}" style="border:1px solid #ccc; padding:10px; margin:10px;">
+	<div class="posts-grid">
 
-		<!-- AUTORE -->
-		<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+		<div th:each="post : ${posts}" class="post-card">
 
-			<img th:src="${post.utente != null && post.utente.urlFotoProfilo != null 
-                        ? post.utente.urlFotoProfilo 
+			<!-- AUTORE -->
+			<a th:if="${post.utente != null}" th:href="@{'/profilo/' + ${post.utente.id}}"
+				style="text-decoration:none; color:inherit;">
+
+				<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+
+					<img th:src="${post.utente.urlFotoProfilo != null
+                        ? post.utente.urlFotoProfilo
                         : '/img/default-avatar.png'}" alt="avatar"
-				style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
+						style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
 
-			<span style="font-weight:bold;" th:text="${post.utente != null && post.utente.credenziali != null 
-                  ? post.utente.credenziali.username 
-                  : 'Utente sconosciuto'}">
-			</span>
+					<span style="font-weight:bold;" th:text="${post.utente.credenziali != null
+                        ? post.utente.credenziali.username
+                        : 'Utente sconosciuto'}">
+					</span>
+
+				</div>
+
+			</a>
+
+			<a th:href="@{'/post/' + ${post.id}}" style="text-decoration:none; color:inherit;">
+				
+				<!-- CONTENUTO POST -->
+				<h3 th:text="${post.titolo}">Titolo post</h3>
+
+				<p th:text="${post.descrizione}">Descrizione</p>
+
+				<div th:if="${post.immagini != null and !#lists.isEmpty(post.immagini)}">
+					<img th:src="@{'/uploads/' + ${post.immagini[0].url}}" class="post-image" />
+				</div>
+
+				<small>
+					Data:
+					<span th:text="${post.data}"></span>
+				</small>
+
+				<br><br>
+			</a>
+
+			<form th:action="@{'/post/' + ${post.id} + '/upVote'}" method="post">
+				<button type="submit">
+					❤️ [[${#lists.size(post.upVotes)}]]
+				</button>
+			</form>
 
 		</div>
-
-		<!-- CONTENUTO POST -->
-		<h3 th:text="${post.titolo}">Titolo post</h3>
-
-		<p th:text="${post.descrizione}">Descrizione</p>
-
-		<div th:if="${post.immagini != null and !#lists.isEmpty(post.immagini)}">
-			<img th:src="@{'/uploads/' + ${post.immagini[0].url}}" style="max-width:200px;" />
-		</div>
-
-		<small>
-			Data:
-			<span th:text="${post.data}"></span>
-		</small>
-
-		<br><br>
-
-		<a th:href="@{'/post/' + ${post.id}}">
-			Vai al post
-		</a>
-
-		<form th:action="@{'/post/' + ${post.id} + '/upVote'}" method="post">
-			<button type="submit">
-				❤️ [[${#lists.size(post.upVotes)}]]
-			</button>
-		</form>
-
 	</div>
 
+	<hr>
+	<div style="text-align:center; margin-top:30px;">
+
+		<a href="https://www.warhammer.com" target="_blank">
+			<img src="https://stores.warhammer.com/wp-content/uploads/2020/11/4jtAGbPWOxDXUHN2.png" alt="Warhammer"
+				style="height:50px; width:auto;">
+		</a>
+
+	</div>
 </body>
 
 </html>
