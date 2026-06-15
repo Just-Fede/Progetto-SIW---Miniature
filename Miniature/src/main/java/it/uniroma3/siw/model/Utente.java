@@ -26,7 +26,7 @@ public class Utente
 	
 	private LocalDate dataRegistrazione;
 	
-	@OneToOne
+	@OneToOne(mappedBy = "utente") 
 	private Credenziali credenziali;
 
 	@OneToMany(mappedBy="utente")

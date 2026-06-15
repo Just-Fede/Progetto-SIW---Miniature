@@ -14,17 +14,17 @@ import static it.uniroma3.siw.SecurityConfiguration.ROLE_USER;
 import it.uniroma3.siw.model.Credenziali;
 import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.service.CredenzialiService;
-import it.uniroma3.siw.service.UtenteService;
+
 
 @Controller
 public class AuthenticationController {
 	private final CredenzialiService credenzialiService;
-	private final UtenteService utenteService;
+	
 	private final PasswordEncoder passwordEncoder;
 
-	public AuthenticationController(CredenzialiService credenzialiService, UtenteService utenteService, PasswordEncoder passwordEncoder) {
+	public AuthenticationController(CredenzialiService credenzialiService, PasswordEncoder passwordEncoder) {
 		this.credenzialiService = credenzialiService;
-		this.utenteService = utenteService;
+		
 		this.passwordEncoder = passwordEncoder;
 	}
 
@@ -61,15 +61,16 @@ public class AuthenticationController {
 		newCredenziali.setPassword(passwordEncoder.encode(password));
 		newCredenziali.setEmail(email);
 		newCredenziali.setRole(role);
-		credenzialiService.saveCredenziali(newCredenziali);
-
+		
 		Utente newUtente = new Utente();
 		newUtente.setCredenziali(newCredenziali);
 		newUtente.setBio("L'Imperatore Protegge!");
 		newUtente.setUrlFotoProfilo("/img/fotoProfilo/default.jpg");
 		newUtente.setDataRegistrazione(LocalDate.now());
-		utenteService.saveUtente(newUtente);
+		
 
+		newCredenziali.setUtente(newUtente);
+    	newUtente.setCredenziali(newCredenziali);
 		newCredenziali.setUtente(newUtente);
 		credenzialiService.saveCredenziali(newCredenziali);
 

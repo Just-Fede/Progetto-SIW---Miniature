@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crea Post</title>
+</head>
+
+<body>
+    <h1>Crea un nuovo post</h1>
+    <form th:action="@{/post/create}" method="post" enctype="multipart/form-data">
+        <label>Titolo:</label><br>
+        <input type="text" name="titolo" required><br><br>
+
+        <label>Contenuto:</label><br>
+        <textarea name="descrizione" required></textarea><br><br>
+
+        <label>Prodotto Originale:</label>
+        <select name="prodottoId">
+            <option value="" disabled selected>Seleziona prodotto</option>
+            <option th:each="p : ${prodottiOriginali}" th:value="${p.id}" th:text="${p.nome}">
+            </option>
+        </select><br><br>
+
+        <label>Immagine Copertina:</label>
+        <input type="file" name="copertina" required><br><br>
+
+        <label>Altre Immagini:</label>
+        <input type="file" name="altreImmagini" multiple><br><br>
+
+        <input type="submit" value="Crea Post">
+    </form>
+
+    <button>
+        <a href="/" class="btn">Torna indietro</a>
+    </button>
+
+</body>
+
+</html>

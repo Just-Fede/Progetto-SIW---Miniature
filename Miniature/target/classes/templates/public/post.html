@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dettaglio Post</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .user {
+            font-weight: bold;
+        }
+
+        .small {
+            color: gray;
+            font-size: 0.9em;
+        }
+
+        .img {
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+        }
+
+        .img-container {
+            width: 100%;
+            max-height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f5f5f5;
+        }
+
+        .img-container img {
+            max-width: 100%;
+            max-height: 500px;
+        }
+
+        .likes {
+            margin-top: 15px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- TITOLO -->
+        <h1 th:text="${post.titolo}">Titolo post</h1>
+
+        <!-- AUTORE -->
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+
+            <a th:if="${post.utente != null}" th:href="@{'/profilo/' + ${post.utente.id}}"
+                style="display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit;">
+
+                <!-- FOTO UTENTE -->
+                <img th:src="${post.utente.urlFotoProfilo != null 
+                        ? post.utente.urlFotoProfilo 
+                        : '/img/default-avatar.png'}" alt="avatar"
+                    style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+
+                <!-- TESTO -->
+                <div style="display:flex; flex-direction:column;">
+
+                    <small style="color:gray; font-size:12px;">Pubblicato da</small>
+
+                    <span style="font-weight:bold;" th:text="${post.utente != null && post.utente.credenziali != null 
+                      ? post.utente.credenziali.username 
+                      : 'Utente sconosciuto'}">
+                    </span>
+
+                </div>
+
+            </a>
+
+        </div>
+
+        <!-- DATA -->
+        <p class="small" th:text="${post.data}">
+            data
+        </p>
+
+        <!-- DESCRIZIONE -->
+        <div class="box">
+            <p th:text="${post.descrizione}">
+                descrizione
+            </p>
+        </div>
+
+        <!-- IMMAGINI -->
+        <div class="box">
+
+            <h3>Immagini</h3>
+
+            <div th:if="${post.immagini == null || #lists.isEmpty(post.immagini)}">
+                Nessuna immagine disponibile
+            </div>
+
+            <div class="gallery" th:if="${post.immagini != null and !#lists.isEmpty(post.immagini)}">
+
+                <div th:each="immagine : ${post.immagini}" th:if="${immagine != null and immagine.url != null}">
+
+                    <img th:src="@{'/uploads/' + ${immagine.url}}" alt="Immagine del post">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PRODOTTO ORIGINALE -->
+
+        <div th:if="${post.prodottoOriginale != null}">
+
+            <div
+                style="border:1px solid #ddd; padding:10px; border-radius:8px; width:500px; display:flex; gap:15px; align-items:flex-start;">
+
+                <!-- IMMAGINE -->
+                <div style="flex:1;">
+                    <img th:src="${post.prodottoOriginale.immagineUrl}" alt="prodotto"
+                        style="width:100%; height:200px; object-fit:contain;">
+                </div>
+
+                <!-- INFO -->
+                <div style="flex:1;">
+
+                    <h4 th:text="${post.prodottoOriginale.nome}"></h4>
+
+                    <p th:text="${post.prodottoOriginale.categoria}" style="font-size:12px; color:gray;"></p>
+
+                    <p th:text="${#strings.abbreviate(post.prodottoOriginale.descrizione, 120)}"
+                        style="font-size:12px; color:#555;"></p>
+
+                    <a th:href="${post.prodottoOriginale.storeUrl}" target="_blank">
+                        Vai allo store
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- LIKE -->
+        <div class="likes">
+
+            <form th:action="@{'/post/' + ${post.id} + '/upVote'}" method="post">
+
+                <button type="submit">
+                    👍 Like
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- CANCELLA -->
+        <form th:action="@{'/post/delete/' + ${post.id}}" method="post">
+
+            <button type="submit" th:if="${utenteLoggato != null and utenteLoggato.id == post.utente.id}">
+                Cancella
+            </button>
+
+            <button type="submit" sec:authorize="hasRole('ROLE_ADMIN')">
+                Cancella
+            </button>
+
+        </form>
+
+        <!-- Commenti -->
+        <div>
+            <a th:href="@{'/user/' + ${post.id} + '/commentoForm'}">
+                <button type="button">Nuovo Commento</button>
+            </a>
+
+            <div th:if="${commenti == null || commenti.isEmpty()}">
+                <p>Ancora nessun commento disponibile.</p>
+            </div>
+
+            <div th:each="commento : ${commenti}" class="box" style="display:flex; gap:10px; align-items:flex-start;">
+
+                <!-- LINK PROFILO (avatar + username) -->
+                <a th:if="${commento.utente != null}" th:href="@{'/profilo/' + ${commento.utente.id}}"
+                    style="display:flex; gap:10px; text-decoration:none; color:inherit;">
+
+                    <!-- AVATAR -->
+                    <img th:src="${commento.utente.urlFotoProfilo != null 
+                        ? commento.utente.urlFotoProfilo 
+                        : '/img/default-avatar.png'}" alt="avatar"
+                        style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+
+                    <!-- CONTENUTO -->
+                    <div style="flex:1;">
+
+                        <!-- USERNAME -->
+                        <h3 style="margin:0; font-size:16px;" th:text="${commento.utente != null && commento.utente.credenziali != null 
+                    ? commento.utente.credenziali.username 
+                    : 'Utente sconosciuto'}">
+                        </h3>
+
+                        <hr>
+
+                        <!-- TITOLO -->
+                        <h4 th:text="${commento.titolo}" style="margin:5px 0;"></h4>
+
+                        <!-- TESTO -->
+                        <p th:text="${commento.testo}" style="font-size:14px; color:#333;"></p>
+
+                        <!-- DATA -->
+                        <small th:text="${commento.data}" style="color:gray;"></small>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <button>
+        <a href="/">Torna indietro</a>
+    </button>
+
+</body>
+
+</html>

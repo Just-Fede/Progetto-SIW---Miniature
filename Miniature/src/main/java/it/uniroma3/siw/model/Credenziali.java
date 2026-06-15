@@ -14,11 +14,11 @@ public class Credenziali
 	private long id;
 	
 	@NotBlank
-	@Column(unique=true)
+	@Column(unique=false)
 	private String username;
 	
 	@NotBlank
-	@Column(unique=true)
+	@Column(unique=false)
 	private String email;
 	
 	@NotBlank
