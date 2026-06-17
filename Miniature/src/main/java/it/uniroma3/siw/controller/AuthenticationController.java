@@ -5,15 +5,17 @@ import java.time.LocalDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import static it.uniroma3.siw.SecurityConfiguration.ROLE_ADMIN;
-import static it.uniroma3.siw.SecurityConfiguration.ROLE_USER;
+import org.springframework.ui.Model;
 import it.uniroma3.siw.model.Credenziali;
 import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.service.CredenzialiService;
+import jakarta.validation.Valid;
 
 
 @Controller
@@ -29,13 +31,16 @@ public class AuthenticationController {
 	}
 
 	@GetMapping("/register")
-	public String showRegisterForm(Authentication authentication) 
-	{
-		if (authentication != null && authentication.isAuthenticated())
-			return "redirect:/";
-
-		return "/Public/register";
-	}
+public String showRegisterForm(Authentication authentication, Model model) {
+    if (authentication != null && authentication.isAuthenticated()) {
+        return "redirect:/";
+    }
+    
+    // Passiamo l'oggetto 'credenziali' richiesto dal form th:object="${credenziali}"
+    model.addAttribute("credenziali", new Credenziali());
+    
+    return "/Public/register";
+}
 
 	@GetMapping("/login")
 	public String showLoginForm(Authentication authentication) 
@@ -47,35 +52,42 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("/register")
-	public String registerUser(	@RequestParam String username, 
-								@RequestParam String password,
-								@RequestParam String email,
-								@RequestParam String role) 
-	{
+	public String registerUser(@Valid @ModelAttribute("credenziali") Credenziali credenziali, 
+                               BindingResult bindingResult, 
+                               Model model) {
 
-		if(!role.equals(ROLE_ADMIN))
-			role = ROLE_USER;
+        // 1. CONTROLLO DUPLICATI (Evita il crash se l'utente esiste già)
+        if (credenzialiService.getCredenziali(credenziali.getUsername()) != null) {
+            // Aggiunge un errore globale al Form senza far crashare nulla
+            bindingResult.addError(new ObjectError("global", "Questo Username è già registrato!"));
+        }
+		// 2. CONTROLLO EMAIL DUPLICATA (Aggiungi questo!)
+		if (credenzialiService.findByEmail(credenziali.getEmail()) != null) {
+        bindingResult.addError(new ObjectError("global", "Questa Email è già in uso!"));
+    	}
+        // 2. SE CI SONO ERRORI (di validazione o duplicati), RICARICA IL FORM
+        if (bindingResult.hasErrors()) {
+            return "/Public/register";
+        }
 
-		Credenziali newCredenziali = new Credenziali();
-		newCredenziali.setUsername(username);
-		newCredenziali.setPassword(passwordEncoder.encode(password));
-		newCredenziali.setEmail(email);
-		newCredenziali.setRole(role);
-		
-		Utente newUtente = new Utente();
-		newUtente.setCredenziali(newCredenziali);
-		newUtente.setBio("L'Imperatore Protegge!");
-		newUtente.setUrlFotoProfilo("/img/fotoProfilo/default.jpg");
-		newUtente.setDataRegistrazione(LocalDate.now());
-		
+        // 3. SE TUTTO È OK, PREPARIAMO L'UTENTE COLLEGATO
+        Utente utente = new Utente();
+        utente.setBio("L'Imperatore Protegge!");
+        utente.setUrlFotoProfilo("/img/fotoProfilo/default.jpg");
+        utente.setDataRegistrazione(LocalDate.now());
 
-		newCredenziali.setUtente(newUtente);
-    	newUtente.setCredenziali(newCredenziali);
-		newCredenziali.setUtente(newUtente);
-		credenzialiService.saveCredenziali(newCredenziali);
+        // Iniettiamo la password criptata
+        credenziali.setPassword(passwordEncoder.encode(credenziali.getPassword()));
+        
+        // Colleghiamo i due oggetti (Relazione bidirezionale)
+        credenziali.setUtente(utente);
+        utente.setCredenziali(credenziali);
 
-		return "redirect:/login";	
-	}
+        // Salviamo. Grazie a CascadeType.ALL su Credenziali, salverà anche l'utente automaticamente
+        credenzialiService.saveCredenziali(credenziali);
+
+        return "redirect:/login";   
+    }
 	
 	@GetMapping("/error/403")
 	public String accessDenied() {

@@ -76,22 +76,33 @@ public String updateUtente(
         @RequestParam String bio,
         @RequestParam String username,
         @RequestParam("fileFoto") MultipartFile file,
-        jakarta.servlet.http.HttpServletRequest request // <-- Ci serve per resettare la sessione nel browser
+        Model model,
+        jakarta.servlet.http.HttpServletRequest request
     ) throws IOException {
 
     Utente utente = utenteService.getUtente(id);
-    utente.setBio(bio);
 
-    // 1. Controlliamo se lo username è stato effettivamente modificato
+    // Controlla se username è già usato da QUALCUN ALTRO
     String vecchioUsername = utente.getCredenziali().getUsername();
     boolean usernameCambiato = !vecchioUsername.equalsIgnoreCase(username);
+
+    if (usernameCambiato) {
+        Credenziali esistente = credenzialiService.getCredenziali(username);
+        if (esistente != null) {
+            // Username già in uso → torna al form con errore
+            model.addAttribute("utente", utente);
+            model.addAttribute("erroreUsername", "Username '" + username + "' già in uso, scegline un altro.");
+            return "/user/utenteForm";
+        }
+    }
+
+    utente.setBio(bio);
 
     if (utente.getCredenziali() != null) {
         utente.getCredenziali().setUsername(username);
         credenzialiService.saveCredenziali(utente.getCredenziali());
     }
 
-    // 2. Gestione Foto Profilo
     if (!file.isEmpty()) {
         Path uploadDir = Paths.get("uploads/avatar");
         if (!Files.exists(uploadDir)) {
@@ -103,23 +114,15 @@ public String updateUtente(
         utente.setUrlFotoProfilo("/uploads/avatar/" + fileName);
     }
 
-    // 3. Salviamo l'utente nel DB
     utenteService.save(utente);
 
-    // 4. Se ha cambiato username, facciamo il logout forzato per ripulire i cookie del browser
     if (usernameCambiato) {
         jakarta.servlet.http.HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate(); // Svuota la sessione del browser
-        }
-        org.springframework.security.core.context.SecurityContextHolder.clearContext(); // Svuota Spring Security
-        
-        // Lo mandiamo al login dicendogli che è andato tutto a buon fine
-        return "redirect:/login?usernameCambiato=true"; 
+        if (session != null) session.invalidate();
+        org.springframework.security.core.context.SecurityContextHolder.clearContext();
+        return "redirect:/login?usernameCambiato=true";
     }
 
-    // Se ha cambiato solo bio o foto, torna al profilo normalmente senza disconnetterlo
     return "redirect:/profilo/" + id;
 }
-
 }

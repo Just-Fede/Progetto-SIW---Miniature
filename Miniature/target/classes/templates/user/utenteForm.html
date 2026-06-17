@@ -89,7 +89,7 @@
 
     <div class="form-container">
         <h2>Modifica Profilo</h2>
-
+        <p th:if="${erroreUsername}" style="color:red;" th:text="${erroreUsername}"></p>
         <form th:action="@{'/utente/' + ${utente.id} + '/form'}" th:object="${utente}" method="post" enctype="multipart/form-data">
 
             <div class="form-group">

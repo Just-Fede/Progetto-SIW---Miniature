@@ -27,5 +27,8 @@ public class CredenzialiService {
     {
         return credenzialiRepository.findByUsername(name).orElse(null);
     }
+    public Credenziali findByEmail(String email) {
+        return credenzialiRepository.findByEmail(email).orElse(null);
+    }
     
 }
