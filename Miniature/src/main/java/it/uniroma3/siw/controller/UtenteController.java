@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -69,34 +70,56 @@ public class UtenteController {
         return "/user/utenteForm";
     }
 
-    @PostMapping("/utente/{id}/form")
-    public String updateUtente
-        (
-            @PathVariable("id") Long id,
-            @RequestParam String bio,
-            @RequestParam("fileFoto") MultipartFile file
-        )
-        throws IOException 
-        {
+ @PostMapping("/utente/{id}/form")
+public String updateUtente(
+        @PathVariable("id") Long id,
+        @RequestParam String bio,
+        @RequestParam String username,
+        @RequestParam("fileFoto") MultipartFile file,
+        jakarta.servlet.http.HttpServletRequest request // <-- Ci serve per resettare la sessione nel browser
+    ) throws IOException {
 
-        Utente utente = utenteService.getUtente(id);
+    Utente utente = utenteService.getUtente(id);
+    utente.setBio(bio);
 
-        utente.setBio(bio);
+    // 1. Controlliamo se lo username è stato effettivamente modificato
+    String vecchioUsername = utente.getCredenziali().getUsername();
+    boolean usernameCambiato = !vecchioUsername.equalsIgnoreCase(username);
 
-        if (!file.isEmpty()) {
-
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-
-            Path path = Paths.get("uploads/avatar/" + fileName);
-
-            Files.copy(file.getInputStream(), path);
-
-            utente.setUrlFotoProfilo("/uploads/avatar/" + fileName);
-        }
-
-        utenteService.save(utente);
-
-        return "redirect:/profilo/" + id;
+    if (utente.getCredenziali() != null) {
+        utente.getCredenziali().setUsername(username);
+        credenzialiService.saveCredenziali(utente.getCredenziali());
     }
+
+    // 2. Gestione Foto Profilo
+    if (!file.isEmpty()) {
+        Path uploadDir = Paths.get("uploads/avatar");
+        if (!Files.exists(uploadDir)) {
+            Files.createDirectories(uploadDir);
+        }
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path path = uploadDir.resolve(fileName);
+        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        utente.setUrlFotoProfilo("/uploads/avatar/" + fileName);
+    }
+
+    // 3. Salviamo l'utente nel DB
+    utenteService.save(utente);
+
+    // 4. Se ha cambiato username, facciamo il logout forzato per ripulire i cookie del browser
+    if (usernameCambiato) {
+        jakarta.servlet.http.HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate(); // Svuota la sessione del browser
+        }
+        org.springframework.security.core.context.SecurityContextHolder.clearContext(); // Svuota Spring Security
+        
+        // Lo mandiamo al login dicendogli che è andato tutto a buon fine
+        return "redirect:/login?usernameCambiato=true"; 
+    }
+
+    // Se ha cambiato solo bio o foto, torna al profilo normalmente senza disconnetterlo
+    return "redirect:/profilo/" + id;
+}
 
 }

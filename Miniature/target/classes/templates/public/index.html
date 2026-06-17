@@ -1,134 +1,273 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<Title>Post</Title>
+    <meta charset="UTF-8">
+    <title>Post</title>
 
-	<style>
-		.posts-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-			gap: 20px;
-			padding: 20px;
-		}
+    <style>
+        /* --- RESET E LAYOUT DI BASE --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
 
-		.post-card {
-			border: 1px solid #ccc;
-			padding: 15px;
-			border-radius: 8px;
-			background: white;
-		}
+        body {
+            background: #f8f9fa;
+            color: #212529;
+            padding-bottom: 40px;
+        }
 
-		.post-card img.post-image {
-			width: 100%;
-			height: 250px;
-			object-fit: cover;
-			border-radius: 8px;
-		}
-	</style>
+        /* --- BARRA DI NAVIGAZIONE (NAVBAR) --- */
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
 
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .navbar a:hover {
+            color: #764ba2;
+        }
+
+        /* Bottone in risalto nella navbar (es. Crea Post o Login) */
+        .navbar .btn-highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+        }
+
+        .navbar .btn-highlight:hover {
+            opacity: 0.9;
+            color: white;
+        }
+
+        .navbar .logout-link {
+            color: #e53e3e;
+        }
+
+        /* --- CONTENUTO CENTRALE --- */
+        .main-content {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        /* --- GRIGLIA DEI POST --- */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .post-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .post-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+
+        /* Intestazione autore nel post */
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .post-author img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #764ba2;
+        }
+
+        .post-author span {
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #2d3748;
+        }
+
+        /* Link al dettaglio del post */
+        .post-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .post-card h3 {
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 1.25rem;
+        }
+
+        .post-card p {
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .post-card img.post-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .post-card small {
+            color: #a0aec0;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        /* --- BOTTONE INTERAZIONE LIKE --- */
+        .post-card button {
+            background: #fff5f5;
+            color: #e53e3e;
+            border: 1px solid #fed7d7;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            align-self: flex-start;
+        }
+
+        .post-card button:hover {
+            background: #ffe3e3;
+            transform: scale(1.05);
+        }
+
+        /* --- FOOTER BANNER --- */
+        .footer-banner {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer-banner img {
+            height: 40px;
+            width: auto;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .footer-banner img:hover {
+            opacity: 1;
+        }
+    </style>
 </head>
 
 <body>
 
-	<span sec:authorize="!isAuthenticated()">
-		<h1><a href="/login">Login </a></h1>
-	</span>
+    <nav class="navbar">
+        <a href="/" style="font-size: 1.25rem; color: #764ba2;">MiniatureHub</a>
+        
+        <div class="nav-links">
+            <span sec:authorize="!isAuthenticated()">
+                <a href="/login" class="btn-highlight">Login</a>
+            </span>
 
-	<span sec:authorize="isAuthenticated()">
-		<h1>
-			<a th:href="@{'/profilo/' + ${utente.id}}">
-				Profilo personale
-			</a>
-		</h1>
+            <span sec:authorize="isAuthenticated()" style="display: flex; gap: 20px; align-items: center;">
+                <a th:href="@{'/profilo/' + ${utente.id}}">Profilo personale</a>
+                <a href="/post/create" class="btn-highlight">Crea Nuovo Post</a>
+                <a href="/logout" class="logout-link">Logout</a>
+            </span>
 
-		<h1> <a href="/post/create">
-				Crea un nuovo post
-			</a>
-		</h1>
+            <span sec:authorize="hasRole('ROLE_ADMIN')">
+                <a href="/admin/index" style="color: #2b6cb0;">🔧 Area Admin</a>
+            </span>
+        </div>
+    </nav>
 
-		<a href="/logout">Logout</a>
+    <main class="main-content">
 
-	</span>
+        <h2>
+            Post recenti: 
+            <span th:text="${posts.size()}">0</span>
+        </h2>
 
-	<span sec:authorize="hasRole('ROLE_ADMIN')">
-		<h1>
-			<a href="/admin/index"> Area Admin </a>
-		</h1>
-	</span>
+        <div th:if="${posts == null || posts.isEmpty()}" style="padding: 20px; color: #718096;">
+            <p>Nessun post disponibile.</p>
+        </div>
 
-	<hr>
+        <div class="posts-grid">
 
-	<h2>
-		Post recenti:
-		<span th:text="${posts.size()}"></span>
-	</h2>
+            <div th:each="post : ${posts}" class="post-card">
+                <div>
+                    <a th:if="${post.utente != null}" th:href="@{'/profilo/' + ${post.utente.id}}" class="post-author">
+                        <img th:src="${post.utente.urlFotoProfilo != null ? post.utente.urlFotoProfilo : '/img/default-avatar.png'}" alt="avatar">
+                        <span th:text="${post.utente.credenziali != null ? post.utente.credenziali.username : 'Utente sconosciuto'}"></span>
+                    </a>
 
-	<div th:if="${posts == null || posts.isEmpty()}">
-		<p>Nessun post disponibile.</p>
-	</div>
+                    <a th:href="@{'/post/' + ${post.id}}" class="post-link">
+                        <h3 th:text="${post.titolo}">Titolo post</h3>
+                        <p th:text="${post.descrizione}">Descrizione</p>
+                        
+                        <div th:if="${post.immagini != null and !#lists.isEmpty(post.immagini)}">
+                            <img th:src="@{'/uploads/' + ${post.immagini[0].url}}" class="post-image" alt="Immagine del post" />
+                        </div>
 
-	<div class="posts-grid">
+                        <small>Data: <span th:text="${post.data}"></span></small>
+                    </a>
+                </div>
 
-		<div th:each="post : ${posts}" class="post-card">
+                <form th:action="@{'/post/' + ${post.id} + '/upVote'}" method="post">
+                    <button type="submit">
+                        ❤️ [[${#lists.size(post.upVotes)}]]
+                    </button>
+                </form>
 
-			<!-- AUTORE -->
-			<a th:if="${post.utente != null}" th:href="@{'/profilo/' + ${post.utente.id}}"
-				style="text-decoration:none; color:inherit;">
+            </div>
+        </div>
 
-				<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <div class="footer-banner">
+            <a href="https://www.warhammer.com" target="_blank">
+                <img src="https://stores.warhammer.com/wp-content/uploads/2020/11/4jtAGbPWOxDXUHN2.png" alt="Warhammer">
+            </a>
+        </div>
 
-					<img th:src="${post.utente.urlFotoProfilo != null
-                        ? post.utente.urlFotoProfilo
-                        : '/img/default-avatar.png'}" alt="avatar"
-						style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
+    </main>
 
-					<span style="font-weight:bold;" th:text="${post.utente.credenziali != null
-                        ? post.utente.credenziali.username
-                        : 'Utente sconosciuto'}">
-					</span>
-
-				</div>
-
-			</a>
-
-			<a th:href="@{'/post/' + ${post.id}}" style="text-decoration:none; color:inherit;">
-				
-				<!-- CONTENUTO POST -->
-				<h3 th:text="${post.titolo}">Titolo post</h3>
-
-				<p th:text="${post.descrizione}">Descrizione</p>
-
-				<div th:if="${post.immagini != null and !#lists.isEmpty(post.immagini)}">
-					<img th:src="@{'/uploads/' + ${post.immagini[0].url}}" class="post-image" />
-				</div>
-
-				<small>
-					Data:
-					<span th:text="${post.data}"></span>
-				</small>
-
-				<br><br>
-			</a>
-
-			<form th:action="@{'/post/' + ${post.id} + '/upVote'}" method="post">
-				<button type="submit">
-					❤️ [[${#lists.size(post.upVotes)}]]
-				</button>
-			</form>
-
-		</div>
-	</div>
-
-	<hr>
-	<div style="text-align:center; margin-top:30px;">
-
-		<a href="https://www.warhammer.com" target="_blank">
-			<img src="https://stores.warhammer.com/wp-content/uploads/2020/11/4jtAGbPWOxDXUHN2.png" alt="Warhammer"
-				style="height:50px; width:auto;">
-		</a>
-
-	</div>
 </body>
-
 </html>

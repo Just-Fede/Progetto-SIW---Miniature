@@ -43,7 +43,7 @@ public class ProdottoOriginaleController {
 
 			this.prodottoOriginaleService.save(prodottoNew);
 			
-			return "redirect:/admin/form/prodottoOriginaleForm";
+			return "redirect:/";
 		}
 		
 }

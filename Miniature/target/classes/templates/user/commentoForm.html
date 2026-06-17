@@ -1,29 +1,66 @@
+
 <!DOCTYPE html>
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Commento Form</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: #f8f9fa;
+            max-width: 450px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        form {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        textarea { height: 100px; resize: vertical; }
+        button { 
+            background: #764ba2; 
+            color: white; 
+            font-weight: bold; 
+            border: none; 
+            cursor: pointer; 
+        }
+        .back-btn { background: #e2e8f0; text-align: center; }
+        .back-btn a { color: #4a5568; text-decoration: none; display: block; }
+    </style>
 </head>
-
 <body>
+
     <form th:action="@{/user/{id}/commentoForm(id=${post.id})}" method="post">
+        <h2>Nuovo Commento</h2>
+        
+        <label>Titolo
+            <input type="text" name="titolo" required th:placeholder="'Inserisci il titolo...'">
+        </label>
 
-        <div>
-            <label for="titolo">Titolo</label>
-            <input type="text" id="titolo" name="titolo" required>
-        </div>
-
-        <div>
-            <label for="testo">Testo</label>
-            <textarea id="testo" name="testo" required></textarea>
-        </div>
+        <label>Testo
+            <textarea name="testo" required th:placeholder="'Scrivi qui...'"></textarea>
+        </label>
 
         <button type="submit">Pubblica commento</button>
     </form>
 
-    <button>
+    <button class="back-btn">
         <a th:href="@{/post/{id}(id=${post.id})}">Torna indietro</a>
     </button>
 
 </body>
-
 </html>

@@ -1,41 +1,133 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crea Post</title>
+    <title>Nuovo Post</title>
+    <style>
+        /* --- LOOK DARK & MINIMALE --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: monospace, sans-serif; }
+        
+        body {
+            background-color: #121214;
+            color: #e2e8f0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #ff9f1c; /* Arancione Warhammer */
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        form {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        /* INPUT GRIGI SCURI CON BORDO IDENTICO */
+        input[type="text"], select, textarea, input[type="file"] {
+            background: #1a1a1e;
+            border: 1px solid #334155;
+            padding: 12px;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            border-color: #ff9f1c;
+        }
+
+        textarea { height: 100px; resize: none; }
+
+        /* BOTTONE COATTO */
+        button {
+            background: #ff9f1c;
+            color: #121214;
+            border: none;
+            padding: 14px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        button:hover { background: #e08600; }
+
+        a {
+            color: #94a3b8;
+            text-decoration: none;
+            margin-top: 25px;
+            font-size: 0.85rem;
+        }
+        a:hover { color: #fff; }
+    </style>
 </head>
 
 <body>
-    <h1>Crea un nuovo post</h1>
+
+    <h1>[ Config_Nuovo_Post ]</h1>
+    
     <form th:action="@{/post/create}" method="post" enctype="multipart/form-data">
-        <label>Titolo:</label><br>
-        <input type="text" name="titolo" required><br><br>
+        
+        <div class="field">
+            <label>Titolo del post</label>
+            <input type="text" name="titolo" required placeholder="...">
+        </div>
 
-        <label>Contenuto:</label><br>
-        <textarea name="descrizione" required></textarea><br><br>
+        <div class="field">
+            <label>Contenuto / Descrizione</label>
+            <textarea name="descrizione" required placeholder="..."></textarea>
+        </div>
 
-        <label>Prodotto Originale:</label>
-        <select name="prodottoId">
-            <option value="" disabled selected>Seleziona prodotto</option>
-            <option th:each="p : ${prodottiOriginali}" th:value="${p.id}" th:text="${p.nome}">
-            </option>
-        </select><br><br>
+        <div class="field">
+            <label>Prodotto Originale</label>
+            <select name="prodottoId">
+                <option value="" disabled selected>Scegli modello</option>
+                <option th:each="p : ${prodottiOriginali}" th:value="${p.id}" th:text="${p.nome}"></option>
+            </select>
+        </div>
 
-        <label>Immagine Copertina:</label>
-        <input type="file" name="copertina" required><br><br>
+        <div class="field">
+            <label>Immagine Copertina</label>
+            <input type="file" name="copertina" required>
+        </div>
 
-        <label>Altre Immagini:</label>
-        <input type="file" name="altreImmagini" multiple><br><br>
+        <div class="field">
+            <label>Altre Immagini</label>
+            <input type="file" name="altreImmagini" multiple>
+        </div>
 
-        <input type="submit" value="Crea Post">
+        <button type="submit">Pubblica Post</button>
     </form>
 
-    <button>
-        <a href="/" class="btn">Torna indietro</a>
-    </button>
+    <a href="/">_Torna alla Home</a>
 
 </body>
-
 </html>
