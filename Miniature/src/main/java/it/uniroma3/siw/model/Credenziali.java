@@ -2,6 +2,9 @@ package it.uniroma3.siw.model;
 
 import java.util.Objects;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -25,9 +28,11 @@ public class Credenziali
 	private String password;
 	
 	@NotBlank
+	
 	private String role;
 	
 	@OneToOne(cascade = CascadeType.ALL)
+	@JsonIgnoreProperties("credenziali")
 	private Utente utente;
 
 	public long getId() {

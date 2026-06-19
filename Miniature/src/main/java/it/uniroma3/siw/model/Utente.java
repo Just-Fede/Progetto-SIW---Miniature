@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,15 +30,19 @@ public class Utente
 	private LocalDate dataRegistrazione;
 	
 	@OneToOne(mappedBy = "utente") 
+	@JsonIgnoreProperties("credenziali")
 	private Credenziali credenziali;
 
 	@OneToMany(mappedBy="utente")
+	@JsonIgnore
 	private List<Post> posts;
 
 	@OneToMany(mappedBy="utente")
+	@JsonIgnore
 	private List<Commento> commenti;
 
 	@OneToMany(mappedBy="utente")
+	@JsonIgnore
 	private List<UpVote> upVotes;
 	
 	public Long getId() {

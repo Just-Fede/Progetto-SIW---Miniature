@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
-    <title>Post</title>
+    <title>MiniatureHub - Home</title>
 
     <style>
         /* --- RESET E LAYOUT DI BASE --- */
@@ -30,6 +30,13 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
+        .nav-brand {
+            font-size: 1.25rem; 
+            color: #764ba2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
         .nav-links {
             display: flex;
             align-items: center;
@@ -47,7 +54,16 @@
             color: #764ba2;
         }
 
-        /* Bottone in risalto nella navbar (es. Crea Post o Login) */
+        /* Bottone cerca stile Instagram */
+        .btn-search {
+            color: #764ba2 !important;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Bottone in risalto nella navbar */
         .navbar .btn-highlight {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -149,7 +165,6 @@
             width: 100%;
             height: 220px;
             object-fit: contain;
-          
             border-radius: 8px;
             margin-bottom: 12px;
             display: block;
@@ -203,15 +218,17 @@
 <body>
 
     <nav class="navbar">
-        <a href="/" style="font-size: 1.25rem; color: #764ba2;">MiniatureHub</a>
+        <a href="/" class="nav-brand">MiniatureHub</a>
         
         <div class="nav-links">
+            <a href="http://localhost:5173/ricerca-post" class="btn-search">🔍 Esplora Hub</a>
+
             <span sec:authorize="!isAuthenticated()">
                 <a href="/login" class="btn-highlight">Login</a>
             </span>
 
             <span sec:authorize="isAuthenticated()" style="display: flex; gap: 20px; align-items: center;">
-                <a th:href="@{'/profilo/' + ${utente.id}}">Profilo personale</a>
+                <a th:if="${utente != null}" th:href="@{'/profilo/' + ${utente.id}}">Profilo personale</a>
                 <a href="/post/create" class="btn-highlight">Crea Nuovo Post</a>
                 <a href="/logout" class="logout-link">Logout</a>
             </span>
@@ -238,7 +255,7 @@
             <div th:each="post : ${posts}" class="post-card">
                 <div>
                     <a th:if="${post.utente != null}" th:href="@{'/profilo/' + ${post.utente.id}}" class="post-author">
-                        <img th:src="${post.utente.urlFotoProfilo != null ? post.utente.urlFotoProfilo : '/img/default-avatar.png'}" alt="avatar">
+                        <img th:src="${post.utente.urlFotoProfilo != null ? post.utente.urlFotoProfilo : '/img/fotoProfilo/default.jpg'}" alt="avatar">
                         <span th:text="${post.utente.credenziali != null ? post.utente.credenziali.username : 'Utente sconosciuto'}"></span>
                     </a>
 
