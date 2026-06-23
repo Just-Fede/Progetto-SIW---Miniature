@@ -45,14 +45,21 @@ public class SecurityConfiguration
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception 
-    {
-        
-        http
-            .csrf(csrf -> csrf.disable())
+ @Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception 
+{
+    http
+        // 🌟 Diciamo a Spring di ignorare il CSRF per React, per le immagini e anche per la richiesta di LOGIN
+        .csrf(csrf -> csrf.ignoringRequestMatchers("/rest/**", "/uploads/**", "/login"))
 
-            .authorizeHttpRequests(authorize -> {
+        .authorizeHttpRequests(authorize -> {
+
+            // 1. Permetti l'accesso a tutte le API REST di React
+            authorize.requestMatchers("/rest/**").permitAll();
+            
+            // 2. Permetti l'accesso alle immagini dei post e degli avatar
+            authorize.requestMatchers("/uploads/**").permitAll();
+            authorize.requestMatchers("/img/**").permitAll(); 
 
             authorize.requestMatchers("/admin/**")
                     .hasAuthority(ROLE_ADMIN);
@@ -64,20 +71,19 @@ public class SecurityConfiguration
             authorize.anyRequest().permitAll();
         });
 
-        http.formLogin(form -> {
-            form.loginPage("/login");
-            form.defaultSuccessUrl("/", true);
-            form.failureUrl("/login?error=true");
-            form.permitAll();
-        });
+    http.formLogin(form -> {
+        form.loginPage("/login");
+        form.defaultSuccessUrl("/", true);
+        form.failureUrl("/login?error=true");
+        form.permitAll();
+    });
 
-        http.logout(logout -> {
-            logout.logoutUrl("/logout");
-            logout.logoutSuccessUrl("/");
-            logout.permitAll();
-        });
+    http.logout(logout -> {
+        logout.logoutUrl("/logout");
+        logout.logoutSuccessUrl("/");
+        logout.permitAll();
+    });
 
-        return http.build();
-    }
-
+    return http.build();
+}
 }

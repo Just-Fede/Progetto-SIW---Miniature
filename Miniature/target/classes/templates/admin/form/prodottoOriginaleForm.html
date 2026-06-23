@@ -1,30 +1,142 @@
-<form th:action="@{/admin/form/prodottoOriginaleForm}" method="post">
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuovo Prodotto Originale</title>
+    <style>
+        /* --- LOOK MINIMALE E MODERNO --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+        
+        body {
+            background-color: #fafafa;
+            color: #2d3748;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
 
-    <div>
-        <label>Nome</label>
-        <input type="text" name="nome" required>
+        .admin-box {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #1a202c;
+            border-left: 4px solid #3182ce; /* Dettaglio blu tech */
+            padding-left: 10px;
+        }
+
+        .field {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #718096;
+        }
+
+        /* INPUT PULITI CON BORDO LEGGERO */
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            outline: none;
+            background: #f7fafc;
+            transition: all 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #3182ce;
+            background: #fff;
+        }
+
+        /* GRUPPO BOTTONI IN LINEA */
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button, .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+        }
+
+        /* Bottone Salva (Blu) */
+        button[type="submit"] {
+            background-color: #3182ce;
+            color: white;
+        }
+        button[type="submit"]:hover { background-color: #2b6cb0; }
+
+        /* Bottone Annulla (Grigio/Bianco) */
+        .btn-cancel {
+            background-color: #edf2f7;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+        .btn-cancel:hover { background-color: #e2e8f0; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-box">
+        <h2>Nuovo Prodotto Originale</h2>
+
+        <form th:action="@{/admin/form/prodottoOriginaleForm}" method="post">
+
+            <div class="field">
+                <label>Nome Prodotto</label>
+                <input type="text" name="nome" required placeholder="Es. Space Marine Intercessors">
+            </div>
+
+            <div class="field">
+                <label>Descrizione</label>
+                <input type="text" name="descrizione" required placeholder="Breve descrizione del box...">
+            </div>
+
+            <div class="field">
+                <label>Categoria</label>
+                <input type="text" name="categoria" required placeholder="Es. Warhammer 40k / AoS">
+            </div>
+
+            <div class="field">
+                <label>Store URL</label>
+                <input type="text" name="storeUrl" required placeholder="https://...">
+            </div>
+
+            <div class="field">
+                <label>Immagine URL</label>
+                <input type="text" name="immagineUrl" required placeholder="https://...">
+            </div>
+
+            <div class="actions">
+                <button type="submit">Salva</button>
+                <a th:href="@{/}" class="btn-cancel">Annulla</a>
+            </div>
+            
+        </form>
     </div>
 
-    <div>
-        <label>Descrizione</label>
-        <input type="text" name="descrizione" required>
-    </div>
-
-    <div>
-        <label>Categoria</label>
-        <input type="text" name="categoria" required>
-    </div>
-
-    <div>
-        <label>Store URL</label>
-        <input type="text" name="storeUrl" required>
-    </div>
-
-    <div>
-        <label>Immagine URL</label>
-        <input type="text" name="immagineUrl" required>
-    </div>
-
-    <button type="submit">Salva</button>
-    <a th:href="@{/}">torna al menu </a>
-</form>
+</body>
+</html>

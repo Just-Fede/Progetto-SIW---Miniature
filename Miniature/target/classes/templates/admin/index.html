@@ -1,11 +1,124 @@
 <!DOCTYPE html>
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pannello di Controllo Admin</title>
+    
+    <style>
+        /* Reset e Stili Generali */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
 
+        body {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container della Dashboard */
+        .admin-dashboard {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(30, 41, 59, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Intestazione */
+        .dashboard-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .dashboard-header h1 {
+            font-size: 1.8rem;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-header p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        /* Griglia delle Azioni/Link */
+        .actions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Bottoni d'azione stilizzati */
+        .btn-admin {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 1.5rem;
+            background-color: #0f172a; /* Grigio scuro/Nero quasi imperiale */
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 4px 6px rgba(15, 23, 42, 0.15);
+        }
+
+        .btn-admin:hover {
+            background-color: #1e293b;
+            transform: translateY(-2px);
+        }
+
+        .btn-admin:active {
+            transform: translateY(0);
+        }
+
+        /* Link di uscita secondario */
+        .back-home {
+            display: block;
+            text-align: center;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-home:hover {
+            color: #0f172a;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
-    <a href="/admin/form/prodottoOriginaleForm"> Aggiungi Prodotto Originale </a>
-</body>
 
+    <div class="admin-dashboard">
+        <div class="dashboard-header">
+            <h1>Pannello di Controllo</h1>
+            <p>Benvenuto nell'area amministrativa di MiniatureWorld</p>
+        </div>
+
+        <div class="actions-grid">
+            <a href="/admin/form/prodottoOriginaleForm" class="btn-admin">
+                ➕ Aggiungi Prodotto Originale
+            </a>
+            
+            </div>
+
+        <a href="/" class="back-home">Torna alla Home del sito</a>
+    </div>
+
+</body>
 </html>

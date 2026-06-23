@@ -1,24 +1,153 @@
-<html>
-	<head>
-		<title>Login</title>
-	</head>
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        /* --- RESET E BACKGROUND CHILL --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
 
-	<body>
-		<h1>Login</h1>
-		<form action="/login" method="post">
-			<div>
-				<label for="username">Username:</label>
-				<input type="text" id="username" name="username" required />
-			</div>
-			<div>
-				<label for="password">Password:</label>
-				<input type="password" id="password" name="password" required />
-			</div>
-			<button type="submit">Login</button>
-		</form>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-        <a href="/register"> Non hai un account? Iscriviti! </a><br>
-		<a href="/"> Continua come ospite </a>
+        /* --- CARD LOGIN --- */
+        .login-container {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
 
-	</body>
+        h1 {
+            margin-bottom: 1.5rem;
+            color: #2d3748;
+            font-size: 1.8rem;
+        }
+
+        /* --- MESSAGGIO DI CONFERMA (Nuovo stile spostato qui) --- */
+        .alert-success {
+            color: #2f855a;
+            background-color: #f0fff4;
+            border: 1px solid #c6f6d5;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .input-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* --- INPUT E BOTTONE --- */
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0.5rem 0 1.5rem 0;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        /* --- LINK INFERIORI --- */
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        a {
+            color: #764ba2;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+        <h1>Accedi</h1>
+        
+        <div th:if="${param.usernameCambiato}" class="alert-success">
+            Username aggiornato! Effettua di nuovo l'accesso.
+        </div>
+        
+        <form action="/login" method="post">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Inserisci il tuo username" />
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Inserisci la tua password" />
+            </div>
+            
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="links-container">
+            <a href="/register">Non hai un account? Iscriviti!</a>
+            <a href="/">Continua come ospite</a>
+        </div>
+    </div>
+
+</body>
 </html>

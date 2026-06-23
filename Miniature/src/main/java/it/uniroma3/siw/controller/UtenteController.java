@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -69,34 +70,59 @@ public class UtenteController {
         return "/user/utenteForm";
     }
 
-    @PostMapping("/utente/{id}/form")
-    public String updateUtente
-        (
-            @PathVariable("id") Long id,
-            @RequestParam String bio,
-            @RequestParam("fileFoto") MultipartFile file
-        )
-        throws IOException 
-        {
+ @PostMapping("/utente/{id}/form")
+public String updateUtente(
+        @PathVariable("id") Long id,
+        @RequestParam String bio,
+        @RequestParam String username,
+        @RequestParam("fileFoto") MultipartFile file,
+        Model model,
+        jakarta.servlet.http.HttpServletRequest request
+    ) throws IOException {
 
-        Utente utente = utenteService.getUtente(id);
+    Utente utente = utenteService.getUtente(id);
 
-        utente.setBio(bio);
+    // Controlla se username è già usato da QUALCUN ALTRO
+    String vecchioUsername = utente.getCredenziali().getUsername();
+    boolean usernameCambiato = !vecchioUsername.equalsIgnoreCase(username);
 
-        if (!file.isEmpty()) {
-
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-
-            Path path = Paths.get("uploads/avatar/" + fileName);
-
-            Files.copy(file.getInputStream(), path);
-
-            utente.setUrlFotoProfilo("/uploads/avatar/" + fileName);
+    if (usernameCambiato) {
+        Credenziali esistente = credenzialiService.getCredenziali(username);
+        if (esistente != null) {
+            // Username già in uso → torna al form con errore
+            model.addAttribute("utente", utente);
+            model.addAttribute("erroreUsername", "Username '" + username + "' già in uso, scegline un altro.");
+            return "/user/utenteForm";
         }
-
-        utenteService.save(utente);
-
-        return "redirect:/profilo/" + id;
     }
 
+    utente.setBio(bio);
+
+    if (utente.getCredenziali() != null) {
+        utente.getCredenziali().setUsername(username);
+        credenzialiService.saveCredenziali(utente.getCredenziali());
+    }
+
+    if (!file.isEmpty()) {
+        Path uploadDir = Paths.get("uploads/avatar");
+        if (!Files.exists(uploadDir)) {
+            Files.createDirectories(uploadDir);
+        }
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path path = uploadDir.resolve(fileName);
+        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        utente.setUrlFotoProfilo("/uploads/avatar/" + fileName);
+    }
+
+    utenteService.save(utente);
+
+    if (usernameCambiato) {
+        jakarta.servlet.http.HttpSession session = request.getSession(false);
+        if (session != null) session.invalidate();
+        org.springframework.security.core.context.SecurityContextHolder.clearContext();
+        return "redirect:/login?usernameCambiato=true";
+    }
+
+    return "redirect:/profilo/" + id;
+}
 }

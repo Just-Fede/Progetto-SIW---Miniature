@@ -2,6 +2,8 @@ package it.uniroma3.siw.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +27,7 @@ public class Immagine
 	private boolean copertina = false;
 	
 	@ManyToOne
+	@JsonIgnore
 	private Post post;
 
 	public Long getId() {
