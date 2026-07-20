@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nuovo Post</title>
     <style>
-        /* --- LOOK DARK & MINIMALE --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: monospace, sans-serif; }
-        
+        /* --- LOOK CHIARO & MINIMALE --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; }
+
         body {
-            background-color: #121214;
-            color: #e2e8f0;
+            background-color: #ffffff;
+            color: #1a1a1a;
             padding: 40px 20px;
             display: flex;
             flex-direction: column;
@@ -19,11 +19,14 @@
         }
 
         h1 {
-            color: #ff9f1c; /* Arancione Warhammer */
-            font-size: 1.5rem;
+            color: #1a1a1a;
+            font-size: 1.4rem;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 30px;
+            border-bottom: 2px solid #1a1a1a;
+            padding-bottom: 12px;
         }
 
         form {
@@ -41,61 +44,68 @@
         }
 
         label {
-            font-size: 0.85rem;
-            color: #94a3b8;
+            font-size: 0.8rem;
+            color: #6b6b6b;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        /* INPUT GRIGI SCURI CON BORDO IDENTICO */
+        /* INPUT CHIARI CON BORDO SOTTILE */
         input[type="text"], select, textarea, input[type="file"] {
-            background: #1a1a1e;
-            border: 1px solid #334155;
+            background: #ffffff;
+            border: 1px solid #d4d4d4;
             padding: 12px;
-            color: #fff;
+            color: #1a1a1a;
             border-radius: 4px;
             font-size: 0.95rem;
             outline: none;
+            transition: border-color 0.2s ease;
         }
 
         input[type="text"]:focus, select:focus, textarea:focus {
-            border-color: #ff9f1c;
+            border-color: #1a1a1a;
+        }
+
+        input[type="text"]::placeholder, textarea::placeholder {
+            color: #a3a3a3;
         }
 
         textarea { height: 100px; resize: none; }
 
-        /* BOTTONE COATTO */
+        /* BOTTONE MINIMALE */
         button {
-            background: #ff9f1c;
-            color: #121214;
+            background: #1a1a1a;
+            color: #ffffff;
             border: none;
             padding: 14px;
-            font-weight: bold;
+            font-weight: 600;
             font-size: 1rem;
             text-transform: uppercase;
             cursor: pointer;
             letter-spacing: 1px;
             margin-top: 10px;
             border-radius: 4px;
+            transition: background 0.2s ease;
         }
 
-        button:hover { background: #e08600; }
+        button:hover { background: #333333; }
 
         a {
-            color: #94a3b8;
+            color: #6b6b6b;
             text-decoration: none;
             margin-top: 25px;
             font-size: 0.85rem;
         }
-        a:hover { color: #fff; }
+        a:hover { color: #1a1a1a; }
     </style>
 </head>
 
 <body>
 
-    <h1>[ Config_Nuovo_Post ]</h1>
-    
+    <h1>Crea Nuovo Post</h1>
+
     <form th:action="@{/post/create}" method="post" enctype="multipart/form-data">
-        
+
         <div class="field">
             <label>Titolo del post</label>
             <input type="text" name="titolo" required placeholder="...">
@@ -127,7 +137,7 @@
         <button type="submit">Pubblica Post</button>
     </form>
 
-    <a href="/">_Torna alla Home</a>
+    <a href="/">Torna alla Home</a>
 
 </body>
 </html>

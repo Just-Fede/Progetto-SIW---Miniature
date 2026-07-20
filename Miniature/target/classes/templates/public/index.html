@@ -27,11 +27,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
 
         .nav-brand {
-            font-size: 1.25rem; 
+            font-size: 1.25rem;
             color: #764ba2;
             text-decoration: none;
             font-weight: bold;
@@ -76,9 +76,15 @@
             color: white;
         }
 
-        .navbar .logout-link {
-            color: #e53e3e;
-        }
+.logout-link {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-decoration: none;
+}
 
         /* --- CONTENUTO CENTRALE --- */
         .main-content {
@@ -105,7 +111,7 @@
             border: 1px solid #e2e8f0;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
             transition: transform 0.2s, box-shadow 0.2s;
             display: flex;
             flex-direction: column;
@@ -114,7 +120,7 @@
 
         .post-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
         }
 
         /* Intestazione autore nel post */
@@ -219,7 +225,7 @@
 
     <nav class="navbar">
         <a href="/" class="nav-brand">MiniatureHub</a>
-        
+
         <div class="nav-links">
             <a href="http://localhost:5173/ricerca-post" class="btn-search">🔍 Esplora Hub</a>
 
@@ -230,7 +236,9 @@
             <span sec:authorize="isAuthenticated()" style="display: flex; gap: 20px; align-items: center;">
                 <a th:if="${utente != null}" th:href="@{'/profilo/' + ${utente.id}}">Profilo personale</a>
                 <a href="/post/create" class="btn-highlight">Crea Nuovo Post</a>
-                <a href="/logout" class="logout-link">Logout</a>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="logout-link">Logout</button>
+                </form>
             </span>
 
             <span sec:authorize="hasRole('ROLE_ADMIN')">
@@ -242,7 +250,7 @@
     <main class="main-content">
 
         <h2>
-            Post recenti: 
+            Post recenti:
             <span th:text="${posts.size()}">0</span>
         </h2>
 
@@ -255,16 +263,19 @@
             <div th:each="post : ${posts}" class="post-card">
                 <div>
                     <a th:if="${post.utente != null}" th:href="@{'/profilo/' + ${post.utente.id}}" class="post-author">
-                        <img th:src="${post.utente.urlFotoProfilo != null ? post.utente.urlFotoProfilo : '/img/fotoProfilo/default.jpg'}" alt="avatar">
-                        <span th:text="${post.utente.credenziali != null ? post.utente.credenziali.username : 'Utente sconosciuto'}"></span>
+                        <img th:src="${post.utente.urlFotoProfilo != null ? post.utente.urlFotoProfilo : '/img/fotoProfilo/default.jpg'}"
+                            alt="avatar">
+                        <span
+                            th:text="${post.utente.credenziali != null ? post.utente.credenziali.username : 'Utente sconosciuto'}"></span>
                     </a>
 
                     <a th:href="@{'/post/' + ${post.id}}" class="post-link">
                         <h3 th:text="${post.titolo}">Titolo post</h3>
                         <p th:text="${post.descrizione}">Descrizione</p>
-                        
+
                         <div th:if="${post.immagini != null and !#lists.isEmpty(post.immagini)}">
-                            <img th:src="@{'/uploads/' + ${post.immagini[0].url}}" class="post-image" alt="Immagine del post" />
+                            <img th:src="@{'/uploads/' + ${post.immagini[0].url}}" class="post-image"
+                                alt="Immagine del post" />
                         </div>
 
                         <small>Data: <span th:text="${post.data}"></span></small>
@@ -289,4 +300,5 @@
     </main>
 
 </body>
+
 </html>
