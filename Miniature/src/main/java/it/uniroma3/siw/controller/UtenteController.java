@@ -70,59 +70,69 @@ public class UtenteController {
         return "/user/utenteForm";
     }
 
- @PostMapping("/utente/{id}/form")
-public String updateUtente(
-        @PathVariable("id") Long id,
-        @RequestParam String bio,
-        @RequestParam String username,
-        @RequestParam("fileFoto") MultipartFile file,
-        Model model,
-        jakarta.servlet.http.HttpServletRequest request
+    @PostMapping("/utente/{id}/form")
+    public String updateUtente(
+            @PathVariable("id") Long id,
+            @RequestParam String bio,
+            @RequestParam String username,
+            @RequestParam("fileFoto") MultipartFile file,
+            Model model,
+            jakarta.servlet.http.HttpServletRequest request
     ) throws IOException {
 
-    Utente utente = utenteService.getUtente(id);
+        Utente utente = utenteService.getUtente(id);
 
-    // Controlla se username è già usato da QUALCUN ALTRO
-    String vecchioUsername = utente.getCredenziali().getUsername();
-    boolean usernameCambiato = !vecchioUsername.equalsIgnoreCase(username);
+        // Controlla se username è già usato da QUALCUN ALTRO
+        String vecchioUsername = utente.getCredenziali().getUsername();
+        boolean usernameCambiato = !vecchioUsername.equalsIgnoreCase(username);
 
-    if (usernameCambiato) {
-        Credenziali esistente = credenzialiService.getCredenziali(username);
-        if (esistente != null) {
-            // Username già in uso → torna al form con errore
-            model.addAttribute("utente", utente);
-            model.addAttribute("erroreUsername", "Username '" + username + "' già in uso, scegline un altro.");
-            return "/user/utenteForm";
+        if (usernameCambiato) {
+            Credenziali esistente = credenzialiService.getCredenziali(username);
+            if (esistente != null) {
+                // Username già in uso → torna al form con errore
+                model.addAttribute("utente", utente);
+                model.addAttribute("erroreUsername", "Username '" + username + "' già in uso, scegline un altro.");
+                return "/user/utenteForm";
+            }
         }
-    }
 
-    utente.setBio(bio);
+        utente.setBio(bio);
 
-    if (utente.getCredenziali() != null) {
-        utente.getCredenziali().setUsername(username);
-        credenzialiService.saveCredenziali(utente.getCredenziali());
-    }
-
-    if (!file.isEmpty()) {
-        Path uploadDir = Paths.get("uploads/avatar");
-        if (!Files.exists(uploadDir)) {
-            Files.createDirectories(uploadDir);
+        if (utente.getCredenziali() != null) {
+            utente.getCredenziali().setUsername(username);
+            credenzialiService.saveCredenziali(utente.getCredenziali());
         }
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path path = uploadDir.resolve(fileName);
-        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-        utente.setUrlFotoProfilo("/uploads/avatar/" + fileName);
+
+        if (!file.isEmpty()) {
+            Path uploadDir = Paths.get("uploads/avatar");
+            if (!Files.exists(uploadDir)) {
+                Files.createDirectories(uploadDir);
+            }
+
+            // Estrai l'estensione originale (es. ".jpg", ".png")
+            String originalFilename = file.getOriginalFilename();
+            String estensione = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                estensione = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+
+            String fileName = "utente_" + id + estensione;
+            Path path = uploadDir.resolve(fileName);
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            utente.setUrlFotoProfilo("/uploads/avatar/" + fileName);
+        }
+
+        utenteService.save(utente);
+
+        if (usernameCambiato) {
+            jakarta.servlet.http.HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            org.springframework.security.core.context.SecurityContextHolder.clearContext();
+            return "redirect:/login?usernameCambiato=true";
+        }
+
+        return "redirect:/profilo/" + id;
     }
-
-    utenteService.save(utente);
-
-    if (usernameCambiato) {
-        jakarta.servlet.http.HttpSession session = request.getSession(false);
-        if (session != null) session.invalidate();
-        org.springframework.security.core.context.SecurityContextHolder.clearContext();
-        return "redirect:/login?usernameCambiato=true";
-    }
-
-    return "redirect:/profilo/" + id;
-}
 }

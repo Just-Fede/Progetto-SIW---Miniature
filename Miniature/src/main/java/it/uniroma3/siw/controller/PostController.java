@@ -1,7 +1,6 @@
 package it.uniroma3.siw.controller;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,6 +43,47 @@ public class PostController {
         this.credenzialiService = credenzialiService;
     }
 
+    // #########################################[CONTROLLER PAGINA INDEX]#########################################################################
+    @GetMapping("/")
+    public String home(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+
+        if (userDetails != null) {
+            Utente utente = credenzialiService
+                    .getCredenziali(userDetails.getUsername())
+                    .getUtente();
+
+            model.addAttribute("utente", utente);
+
+        }
+
+        List<Post> elencoPost = this.postService.findAll();
+
+    // Ordino i post in base ai upVote, a parità in base alla data 
+
+        Collections.sort(elencoPost, new Comparator<Post>() 
+        {
+            @Override
+            public int compare(Post p1, Post p2) 
+            {
+                int cmp = p2.getUpVotes().size() - p1.getUpVotes().size();
+                if (cmp != 0) 
+                    return cmp;
+                return p1.getData().compareTo(p2.getData());
+            }
+        });
+
+        model.addAttribute("posts", elencoPost);
+
+        return "/public/index";
+    }
+
+    @GetMapping("/admin/index")
+    public String getAdminIndex() {
+        return "/admin/index";
+    }
+
+    /*#########################################[CONTROLLER POST]#########################################################################*/
+
     @GetMapping("/post/create")
     public String getPostForm(Model model) {
         List<ProdottoOriginale> prodotti = this.prodottoOriginaleService.findAll();
@@ -52,7 +92,6 @@ public class PostController {
         return "/user/postForm";
     }
 
-    /*#########################################[ATTENZIONE]#########################################################################*/
     @PostMapping("/post/create")
     public String postPostForm(
             @RequestParam String titolo,
@@ -63,8 +102,9 @@ public class PostController {
             @AuthenticationPrincipal UserDetails userDetails
     ) {
 
-        if (userDetails == null) 
+        if (userDetails == null) {
             return "redirect:/login";
+        }
 
         Credenziali credenziali = credenzialiService
                 .getCredenzialiByUsername(userDetails.getUsername());
@@ -81,7 +121,7 @@ public class PostController {
         return "redirect:/";
     }
 
-    /*#########################################[ATTENZIONE]#########################################################################*/
+    /*#########################################[CONTROLLER UPVOTE]#########################################################################*/
     @PostMapping("/post/{id}/upVote")
     public String upVotePost(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
 
@@ -99,13 +139,14 @@ public class PostController {
         return "redirect:/";
     }
 
+    /*#########################################[CONTROLLER POST]#########################################################################*/
+
     @GetMapping("/post/{id}")
     public String getPost(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         Post post = postService.findById(id);
         model.addAttribute("post", post);
 
-        if(userDetails != null)
-        {
+        if (userDetails != null) {
             Utente utenteLoggato = this.credenzialiService.getCredenzialiByUsername(userDetails.getUsername()).getUtente();
             model.addAttribute("utenteLoggato", utenteLoggato);
         }
@@ -117,28 +158,29 @@ public class PostController {
 
     @PostMapping("/post/delete/{id}")
     public String deletePost(@PathVariable Long id,
-                             @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal UserDetails userDetails) {
 
-        if (userDetails == null)
+        if (userDetails == null) {
             return "redirect:/login";
+        }
 
         Post post = postService.findById(id);
 
-        Credenziali credenziali =
-                credenzialiService.getCredenzialiByUsername(userDetails.getUsername());
+        Credenziali credenziali
+                = credenzialiService.getCredenzialiByUsername(userDetails.getUsername());
 
         boolean admin = credenziali.getRole().equals(ROLE_ADMIN);
 
-        boolean proprietario =
-                credenziali.getUtente().getId().equals(post.getUtente().getId());
+        boolean proprietario
+                = credenziali.getUtente().getId().equals(post.getUtente().getId());
 
-        if (!admin && !proprietario)
+        if (!admin && !proprietario) {
             return "error/403";
+        }
 
         postService.delete(post);
 
         return "redirect:/";
     }
-    
 
 }
