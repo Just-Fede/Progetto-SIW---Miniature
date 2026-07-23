@@ -58,20 +58,6 @@ public class PostController {
 
         List<Post> elencoPost = this.postService.findAll();
 
-    // Ordino i post in base ai upVote, a parità in base alla data 
-
-        Collections.sort(elencoPost, new Comparator<Post>() 
-        {
-            @Override
-            public int compare(Post p1, Post p2) 
-            {
-                int cmp = p2.getUpVotes().size() - p1.getUpVotes().size();
-                if (cmp != 0) 
-                    return cmp;
-                return p1.getData().compareTo(p2.getData());
-            }
-        });
-
         model.addAttribute("posts", elencoPost);
 
         return "/public/index";

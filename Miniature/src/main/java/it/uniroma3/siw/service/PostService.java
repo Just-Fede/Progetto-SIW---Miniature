@@ -1,6 +1,8 @@
 package it.uniroma3.siw.service;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -67,10 +69,27 @@ public class PostService {
 
         return post;
     }
-
+ 
     @Transactional(readOnly = true)
-    public List<Post> findAll() {
-        return postRepository.findAll();
+    public List<Post> findAll() 
+    {
+
+        
+        List<Post> posts = postRepository.findAll();
+        
+        Collections.sort(posts, new Comparator<Post>() 
+        {
+            @Override
+            public int compare(Post p1, Post p2)
+            {
+                int cmp = p2.getUpVotes().size() - p1.getUpVotes().size();
+                if(cmp != 0)
+                    return cmp;
+                return p2.getData().compareTo(p1.getData());
+            }    
+        });
+
+       return posts;
     }
 
     @Transactional(readOnly = true)
