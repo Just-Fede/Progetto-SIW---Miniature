@@ -44,7 +44,76 @@ INSERT INTO immagine (url, copertina, post_id) VALUES ('squigbuggy.jpg', true, 6
 INSERT INTO immagine (url, copertina, post_id) VALUES ('marbo.jpg', true, 7);
 INSERT INTO immagine (url, copertina, post_id) VALUES ('haruspex.jpg', true, 8);
 INSERT INTO immagine (url, copertina, post_id) VALUES ('marbo1.jpg', true, 9);
-SELECT setval(pg_get_serial_sequence('utente', 'id'), COALESCE(max(id), 1)) FROM utente;
+--Nuovi Utenti--
+INSERT INTO utente (id, bio, url_foto_profilo, data_registrazione) VALUES (992, 'Appassionato di terreni e diorami, creo basi scenografiche uniche.', '/img/fotoProfilo/default.jpg', '2025-01-10');
+INSERT INTO utente (id, bio, url_foto_profilo, data_registrazione) VALUES (991, 'Fan sfegatato dei Necron, amo la pittura NMM (non-metallic metal).', '/img/fotoProfilo/default.jpg', '2025-03-15');
+INSERT INTO utente (id, bio, url_foto_profilo, data_registrazione) VALUES (990, 'Gioco Kill Team da 2 anni, prediligo le fazioni Xenos.', '/img/fotoProfilo/default.jpg', '2025-04-22');
+INSERT INTO utente (id, bio, url_foto_profilo, data_registrazione) VALUES (989, 'Modellista esperto, converto e scultureggio miniature da 15 anni.', '/img/fotoProfilo/default.jpg', '2024-11-05');
+INSERT INTO utente (id, bio, url_foto_profilo, data_registrazione) VALUES (988, 'Nuovo nel hobby, sto ancora imparando le basi della pittura.', '/img/fotoProfilo/default.jpg', '2026-01-08');
+INSERT INTO utente (id, bio, url_foto_profilo, data_registrazione) VALUES (987, 'Organizzatore di tornei locali, appassionato di lore Warhammer.', '/img/fotoProfilo/default.jpg', '2025-08-30');
 
--- Aggiorna la sequenza della tabella credenziali al valore massimo attuale
+INSERT INTO credenziali (id, username, email, password, role, utente_id) VALUES (992, 'terra_diorama', 'terra@example.com', '$2a$10$7QxYhs3NNqbXSPWdU8O1re3PBT2DpJxBdSgXYFBJ7l9qAK0z3gWUi', 'USER', 992);
+INSERT INTO credenziali (id, username, email, password, role, utente_id) VALUES (991, 'necron_nmm', 'necron@example.com', '$2a$10$7QxYhs3NNqbXSPWdU8O1re3PBT2DpJxBdSgXYFBJ7l9qAK0z3gWUi', 'USER', 991);
+INSERT INTO credenziali (id, username, email, password, role, utente_id) VALUES (990, 'killteam_xenos', 'killteam@example.com', '$2a$10$7QxYhs3NNqbXSPWdU8O1re3PBT2DpJxBdSgXYFBJ7l9qAK0z3gWUi', 'USER', 990);
+INSERT INTO credenziali (id, username, email, password, role, utente_id) VALUES (989, 'scultore_15anni', 'scultore@example.com', '$2a$10$7QxYhs3NNqbXSPWdU8O1re3PBT2DpJxBdSgXYFBJ7l9qAK0z3gWUi', 'USER', 989);
+INSERT INTO credenziali (id, username, email, password, role, utente_id) VALUES (988, 'newbie_painter', 'newbie@example.com', '$2a$10$7QxYhs3NNqbXSPWdU8O1re3PBT2DpJxBdSgXYFBJ7l9qAK0z3gWUi', 'USER', 988);
+INSERT INTO credenziali (id, username, email, password, role, utente_id) VALUES (987, 'torneo_organizer', 'torneo@example.com', '$2a$10$7QxYhs3NNqbXSPWdU8O1re3PBT2DpJxBdSgXYFBJ7l9qAK0z3gWUi', 'USER', 987);
+
+--Commenti (2 per post, id post 1-9)--
+-- Nota: Commento usa GenerationType.AUTO, che non genera un default a livello di colonna:
+-- servono id espliciti anche qui, come gia' avviene per utente e credenziali.
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9001, 'Lavoro incredibile', 'Il chipping sullo Stompa e fatto benissimo, sembra davvero arrugginito e vissuto sul campo di battaglia!', '2026-06-11', 1, 998);
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9002, 'Che mostro', 'Dimensioni pazzesche, complimenti per la pazienza nel dipingere una miniatura cosi grande.', '2026-06-11', 1, 991);
+
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9003, 'Palette perfetta', 'Il contrasto tra la pelle pallida e il Naggaroth Night e stupendo, molto gotico.', '2026-06-13', 2, 997);
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9004, 'Fiamme spettrali top', 'L effetto turchese sulle fiamme magiche da davvero un tocco soprannaturale, bravissima!', '2026-06-13', 2, 989);
+
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9005, 'Divisa impeccabile', 'Il nero opaco con i dettagli in Retributor Armour crea un contrasto perfetto.', '2026-06-15', 3, 996);
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9006, 'Fa paura solo a vederlo', 'La cappa rossa con il wash Carroburg Crimson e semplicemente perfetta, complimenti Commissario!', '2026-06-15', 3, 987);
+
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9007, 'Sfumature notevoli', 'Le sfumature blu sono lisce e uniformi, si vede il lavoro certosino dietro.', '2026-06-16', 4, 993);
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9008, 'Finitura da manuale', 'La finitura opaca dona un aspetto davvero professionale all armatura Gravis.', '2026-06-16', 4, 990);
+
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9009, 'Classico intramontabile', 'Il fango sui cingoli e un dettaglio che fa la differenza, ottimo lavoro sul Rhino.', '2026-06-17', 5, 995);
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9010, 'Weathering superbo', 'Anche io uso questa tecnica per i veicoli, il risultato qui e davvero convincente.', '2026-06-17', 5, 992);
+
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9011, 'Squig fantastici', 'Il rosso acceso degli Squig risalta benissimo sul resto del veicolo, ottima scelta cromatica.', '2026-06-18', 6, 994);
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9012, 'Follia Orka al massimo', 'Modello pieno di dettagli, hai reso benissimo il caos tipico degli Orki.', '2026-06-18', 6, 988);
+
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9013, 'Dettagli minuscoli notevoli', 'I muscoli e il volto sono resi con una precisione incredibile, complimenti per la pazienza.', '2026-06-19', 7, 999);
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9014, 'Pronto per la giungla', 'Un lavoro certosino su una miniatura cosi piccola e dettagliata, davvero notevole.', '2026-06-19', 7, 991);
+
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9015, 'Effetto bava riuscitissimo', 'Il gel lucido sulle fauci rende benissimo l idea della bava, ottima trovata.', '2026-06-20', 8, 997);
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9016, 'Viola e bianco top', 'Schema di colore classico ma eseguito alla perfezione, complimenti per l Haruspex.', '2026-06-20', 8, 989);
+
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9017, 'Idea originale', 'Mi piace molto l idea di uno schema urbano per Marbo, cambia dal solito verde giungla.', '2026-06-20', 9, 990);
+INSERT INTO commento (id, titolo, testo, data, post_id, utente_id) VALUES (9018, 'Lama molto realistica', 'Il graffiato sulla lama d acciaio e un dettaglio che aggiunge tantissimo realismo.', '2026-06-20', 9, 987);
+
+--UpVote (piu voti per post, utenti vari)--
+INSERT INTO up_vote (post_id, utente_id) VALUES (1, 998);
+INSERT INTO up_vote (post_id, utente_id) VALUES (1, 997);
+INSERT INTO up_vote (post_id, utente_id) VALUES (1, 991);
+INSERT INTO up_vote (post_id, utente_id) VALUES (2, 999);
+INSERT INTO up_vote (post_id, utente_id) VALUES (2, 996);
+INSERT INTO up_vote (post_id, utente_id) VALUES (2, 989);
+INSERT INTO up_vote (post_id, utente_id) VALUES (3, 998);
+INSERT INTO up_vote (post_id, utente_id) VALUES (3, 995);
+INSERT INTO up_vote (post_id, utente_id) VALUES (3, 987);
+INSERT INTO up_vote (post_id, utente_id) VALUES (4, 999);
+INSERT INTO up_vote (post_id, utente_id) VALUES (4, 993);
+INSERT INTO up_vote (post_id, utente_id) VALUES (4, 990);
+INSERT INTO up_vote (post_id, utente_id) VALUES (5, 997);
+INSERT INTO up_vote (post_id, utente_id) VALUES (5, 992);
+INSERT INTO up_vote (post_id, utente_id) VALUES (6, 999);
+INSERT INTO up_vote (post_id, utente_id) VALUES (6, 994);
+INSERT INTO up_vote (post_id, utente_id) VALUES (6, 988);
+INSERT INTO up_vote (post_id, utente_id) VALUES (7, 998);
+INSERT INTO up_vote (post_id, utente_id) VALUES (7, 991);
+INSERT INTO up_vote (post_id, utente_id) VALUES (8, 999);
+INSERT INTO up_vote (post_id, utente_id) VALUES (8, 989);
+INSERT INTO up_vote (post_id, utente_id) VALUES (9, 997);
+INSERT INTO up_vote (post_id, utente_id) VALUES (9, 990);
+
+--Aggiornamento sequenze (eseguito per ultimo, considera anche i nuovi id)--
+SELECT setval(pg_get_serial_sequence('utente', 'id'), COALESCE(max(id), 1)) FROM utente;
 SELECT setval(pg_get_serial_sequence('credenziali', 'id'), COALESCE(max(id), 1)) FROM credenziali;
